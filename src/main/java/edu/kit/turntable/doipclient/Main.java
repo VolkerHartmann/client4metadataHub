@@ -117,16 +117,20 @@ public class Main {
     DoipClient client = new DoipClient();
     DigitalObject dobj;
 
-    // authInfo = new PasswordAuthenticationInfo("admin", "password");
-    AuthenticationInfo authInfo = new TokenAuthenticationInfo("metastore_ID", "myPersonalToken");
     ServiceInfo serviceInfo = new ServiceInfo(TARGET_ONE, "localhost", PORT);
     // Configure JSON parser for config file
     Gson gson = new GsonBuilder()
             .setPrettyPrinting()
             .create();
 
-    // Request 0.DOIP/Op.Hello
-    printHeader("HELLO");
+    AuthenticationInfo authInfo; // authInfo = new PasswordAuthenticationInfo("admin", "password");
+     String[] allClientIds = {"metastore_Schema_ID", "coscine_Schema_ID"};
+    String clientId = allClientIds[0];
+    authInfo = new TokenAuthenticationInfo(clientId, "myPersonalToken");
+//    authInfo = null;
+
+    printHeader("HELLO " + clientId);
+
     DigitalObject result = client.hello(TARGET_ONE, authInfo, serviceInfo);
     printResult(result);
 
@@ -173,7 +177,66 @@ public class Main {
     result = client.update(updateSchema, authInfo, serviceInfo);
     printResult(result);
     
-    System.exit(0);
+    printHeader("End of test for clientID: " + clientId);
+
+    /**************************************************************************
+     * Test of next clientID
+     */
+    clientId = allClientIds[1];
+    authInfo = new TokenAuthenticationInfo(clientId, "myPersonalToken");
+//    authInfo = null;
+
+    printHeader("HELLO " + clientId);
+
+    result = client.hello(TARGET_ONE, authInfo, serviceInfo);
+    printResult(result);
+
+    // Request 0.DOIP/Op.ListOperations
+    printHeader("LIST_OPERATIONS");
+    listOperations = client.listOperations(TARGET_ONE, authInfo, serviceInfo);
+    System.out.println(listOperations);
+
+    // Request 0.DOIP/Op.Create
+    printHeader("Create...");
+    dobj = createSchema();
+    result = client.create(dobj, authInfo, serviceInfo);
+    printResult(result);
+    id = result.id;
+    // Fetch also ETag from header
+    eTag = result.attributes.getAsJsonObject("header").get("ETag").getAsString();
+    printHeader("eTag = " + eTag);
+
+    // Request 0.DOIP/Op.Retrieve
+    printHeader("Retrieve without elements!");
+    result = client.retrieve(id, false, authInfo, serviceInfo);
+    printResult(result);
+
+    printHeader("Retrieve all elements!");
+    result = client.retrieve(id, true, authInfo, serviceInfo);
+    printResult(result);
+
+    printHeader("Retrieve one element!");
+    element = client.retrieveElement(id, "schema", authInfo, serviceInfo);
+    printResult(element);
+
+    printHeader("Retrieve metadata element!");
+    element = client.retrieveElement(id, "metadata", authInfo, serviceInfo);
+    printResult(element);
+    printHeader("Retrieve wrong element!");
+    element = client.retrieveElement(id, "invalidElement", authInfo, serviceInfo);
+    reader = new JsonReader(new InputStreamReader(element));
+    result = gson.fromJson(reader, DigitalObject.class);
+    printResult(result);
+
+    // Request 0.DOIP/Op.Update
+    printHeader("update digital object");
+    updateSchema = updateSchema(id, eTag);
+    result = client.update(updateSchema, authInfo, serviceInfo);
+    printResult(result);
+    
+    printHeader("End of test for clientID: " + clientId);
+
+   System.exit(0);
 
   }
 
