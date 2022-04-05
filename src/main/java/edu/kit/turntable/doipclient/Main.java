@@ -22,13 +22,15 @@ import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import net.dona.doip.DoipConstants;
 import net.dona.doip.client.AuthenticationInfo;
 import net.dona.doip.client.DigitalObject;
 import net.dona.doip.client.DoipClient;
 import net.dona.doip.client.DoipException;
 import net.dona.doip.client.Element;
-import net.dona.doip.client.PasswordAuthenticationInfo;
+import net.dona.doip.client.SearchResults;
 import net.dona.doip.client.ServiceInfo;
 import net.dona.doip.client.TokenAuthenticationInfo;
 
@@ -124,7 +126,7 @@ public class Main {
             .create();
 
     AuthenticationInfo authInfo; // authInfo = new PasswordAuthenticationInfo("admin", "password");
-     String[] allClientIds = {"metastore_Schema_ID", "coscine_Schema_ID"};
+    String[] allClientIds = {"metastore_Schema_ID", "coscine_Schema_ID"};
     String clientId = allClientIds[0];
     authInfo = new TokenAuthenticationInfo(clientId, "myPersonalToken");
 //    authInfo = null;
@@ -138,49 +140,77 @@ public class Main {
     printHeader("LIST_OPERATIONS");
     List<String> listOperations = client.listOperations(TARGET_ONE, authInfo, serviceInfo);
     System.out.println(listOperations);
-
+    String id = "anyId";
+    String eTag = "anyETag";
+    InputStream element = null;
+    JsonReader reader;
     // Request 0.DOIP/Op.Create
-    printHeader("Create...");
-    dobj = createSchema();
-    result = client.create(dobj, authInfo, serviceInfo);
-    printResult(result);
-    String id = result.id;
-    // Fetch also ETag from header
-    String eTag = result.attributes.getAsJsonObject("header").get("ETag").getAsString();
-    printHeader("eTag = " + eTag);
+    if (listOperations.contains(DoipConstants.OP_CREATE)) {
+      printHeader("Create...");
+      dobj = createSchema();
+      result = client.create(dobj, authInfo, serviceInfo);
+      printResult(result);
+      id = result.id;
+      // Fetch also ETag from header
+      eTag = result.attributes.getAsJsonObject("header").get("ETag").getAsString();
+      printHeader("eTag = " + eTag);
+    } else {
+      printHeader("Skip Create...");
+    }
+    if (listOperations.contains(DoipConstants.OP_RETRIEVE)) {
+      // Request 0.DOIP/Op.Retrieve
+      printHeader("Retrieve without elements!");
+      result = client.retrieve(id, false, authInfo, serviceInfo);
+      printResult(result);
 
-    // Request 0.DOIP/Op.Retrieve
-    printHeader("Retrieve without elements!");
-    result = client.retrieve(id, false, authInfo, serviceInfo);
-    printResult(result);
+      printHeader("Retrieve all elements!");
+      result = client.retrieve(id, true, authInfo, serviceInfo);
+      printResult(result);
 
-    printHeader("Retrieve all elements!");
-    result = client.retrieve(id, true, authInfo, serviceInfo);
-    printResult(result);
+      printHeader("Retrieve one element!");
+      element = client.retrieveElement(id, "schema", authInfo, serviceInfo);
+      printResult(element);
 
-    printHeader("Retrieve one element!");
-    InputStream element = client.retrieveElement(id, "schema", authInfo, serviceInfo);
-    printResult(element);
+      printHeader("Retrieve metadata element!");
+      element = client.retrieveElement(id, "metadata", authInfo, serviceInfo);
+      printResult(element);
+      printHeader("Retrieve wrong element!");
+      element = client.retrieveElement(id, "invalidElement", authInfo, serviceInfo);
+      reader = new JsonReader(new InputStreamReader(element));
+      result = gson.fromJson(reader, DigitalObject.class);
+      printResult(result);
+    } else {
+      printHeader("Skip Retrieve...");
+    }
+    if (listOperations.contains(DoipConstants.OP_UPDATE)) {
+      // Request 0.DOIP/Op.Update
+      printHeader("update digital object");
+      DigitalObject updateSchema = updateSchema(id, eTag);
+      result = client.update(updateSchema, authInfo, serviceInfo);
+      printResult(result);
+    } else {
+      printHeader("Skip Update...");
+    }
+    if (listOperations.contains(DoipConstants.OP_SEARCH)) {
+      // Request 0.DOIP/Op.Update
+      printHeader("Search digital object");
+      DigitalObject updateSchema = updateSchema(id, eTag);
+      String query = "*";
+      SearchResults<DigitalObject> search = client.search(TARGET_ONE, query, null, authInfo, serviceInfo);
+      Iterator<DigitalObject> iterator = search.iterator();
+      printHeader("Search results: ");
+      while (iterator.hasNext()) {
+        printResult(iterator.next());
+      }
+    } else {
+      printHeader("Skip Search...");
 
-    printHeader("Retrieve metadata element!");
-    element = client.retrieveElement(id, "metadata", authInfo, serviceInfo);
-    printResult(element);
-    printHeader("Retrieve wrong element!");
-    element = client.retrieveElement(id, "invalidElement", authInfo, serviceInfo);
-    JsonReader reader = new JsonReader(new InputStreamReader(element));
-    result = gson.fromJson(reader, DigitalObject.class);
-    printResult(result);
-
-    // Request 0.DOIP/Op.Update
-    printHeader("update digital object");
-    DigitalObject updateSchema = updateSchema(id, eTag);
-    result = client.update(updateSchema, authInfo, serviceInfo);
-    printResult(result);
-    
+    }
     printHeader("End of test for clientID: " + clientId);
 
-    /**************************************************************************
-     * Test of next clientID
+    /**
+     * ************************************************************************
+     * Test of next clientID (application profiles)
      */
     clientId = allClientIds[1];
     authInfo = new TokenAuthenticationInfo(clientId, "myPersonalToken");
@@ -196,47 +226,76 @@ public class Main {
     listOperations = client.listOperations(TARGET_ONE, authInfo, serviceInfo);
     System.out.println(listOperations);
 
-    // Request 0.DOIP/Op.Create
-    printHeader("Create...");
-    dobj = createSchema();
-    result = client.create(dobj, authInfo, serviceInfo);
-    printResult(result);
-    id = result.id;
-    // Fetch also ETag from header
-    eTag = result.attributes.getAsJsonObject("header").get("ETag").getAsString();
-    printHeader("eTag = " + eTag);
+    if (listOperations.contains(DoipConstants.OP_CREATE)) {
+      // Request 0.DOIP/Op.Create
+/////////////////////////////////////////////////////////////////////////
+// Skip create for the moment.
+/////////////////////////////////////////////////////////////////////////
+      printHeader("Create...");
+      dobj = createSchema();
+      result = client.create(dobj, authInfo, serviceInfo);
+      printResult(result);
+      id = result.id;
+      // Fetch also ETag from header
+      eTag = result.attributes.getAsJsonObject("header").get("ETag").getAsString();
+      printHeader("eTag = " + eTag);
+    } else {
+      printHeader("Skip Create...");
+    }
+    if (listOperations.contains(DoipConstants.OP_RETRIEVE)) {
+      // Request 0.DOIP/Op.Retrieve
+      id = new String("https://purl.org/coscine/ap/radar/");
+      printHeader("Retrieve without elements!");
+      result = client.retrieve(id, false, authInfo, serviceInfo);
+      printResult(result);
 
-    // Request 0.DOIP/Op.Retrieve
-    printHeader("Retrieve without elements!");
-    result = client.retrieve(id, false, authInfo, serviceInfo);
-    printResult(result);
+      printHeader("Retrieve all elements!");
+      result = client.retrieve(id, true, authInfo, serviceInfo);
+      printResult(result);
 
-    printHeader("Retrieve all elements!");
-    result = client.retrieve(id, true, authInfo, serviceInfo);
-    printResult(result);
+      printHeader("Retrieve one element!");
+      element = client.retrieveElement(id, "schema", authInfo, serviceInfo);
+      printResult(element);
 
-    printHeader("Retrieve one element!");
-    element = client.retrieveElement(id, "schema", authInfo, serviceInfo);
-    printResult(element);
+      printHeader("Retrieve metadata element!");
+      element = client.retrieveElement(id, "metadata", authInfo, serviceInfo);
+      printResult(element);
+      printHeader("Retrieve wrong element!");
+      element = client.retrieveElement(id, "invalidElement", authInfo, serviceInfo);
+      reader = new JsonReader(new InputStreamReader(element));
+      result = gson.fromJson(reader, DigitalObject.class);
+      printResult(result);
+    } else {
+      printHeader("Skip Retrieve...");
+    }
+    if (listOperations.contains(DoipConstants.OP_UPDATE)) {
+      // Request 0.DOIP/Op.Update
+      printHeader("Update digital object");
+      DigitalObject updateSchema = updateSchema(id, eTag);
+      result = client.update(updateSchema, authInfo, serviceInfo);
+      printResult(result);
+    } else {
+      printHeader("Skip Update...");
 
-    printHeader("Retrieve metadata element!");
-    element = client.retrieveElement(id, "metadata", authInfo, serviceInfo);
-    printResult(element);
-    printHeader("Retrieve wrong element!");
-    element = client.retrieveElement(id, "invalidElement", authInfo, serviceInfo);
-    reader = new JsonReader(new InputStreamReader(element));
-    result = gson.fromJson(reader, DigitalObject.class);
-    printResult(result);
+    }
+    if (listOperations.contains(DoipConstants.OP_SEARCH)) {
+      // Request 0.DOIP/Op.Update
+      printHeader("Search digital object");
+      DigitalObject updateSchema = updateSchema(id, eTag);
+      String query = "*";
+      SearchResults<DigitalObject> search = client.search(TARGET_ONE, query, null, authInfo, serviceInfo);
+      Iterator<DigitalObject> iterator = search.iterator();
+      printHeader("Search results: ");
+      while (iterator.hasNext()) {
+        printResult(iterator.next());
+      }
+    } else {
+      printHeader("Skip Search...");
 
-    // Request 0.DOIP/Op.Update
-    printHeader("update digital object");
-    updateSchema = updateSchema(id, eTag);
-    result = client.update(updateSchema, authInfo, serviceInfo);
-    printResult(result);
-    
+    }
     printHeader("End of test for clientID: " + clientId);
 
-   System.exit(0);
+    System.exit(0);
 
   }
 
