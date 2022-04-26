@@ -10,6 +10,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import edu.kit.datacite.kernel_4.Datacite43Schema;
+import edu.kit.datacite.kernel_4.RelatedIdentifier;
 import edu.kit.datacite.kernel_4.Title;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -108,6 +109,22 @@ public class Main {
           + "}";
 
   /**
+   * JSON schema which should be registered.
+   */
+  private final static String JSON_DOCUMENT = "{\n"
+          + "        \"title\": \"Title\",\n"
+          + "        \"date\": \"2022-04-25\"\n"
+          + "}";
+  /**
+   * Second version of schema for updating schema.
+   */
+  private final static String JSON_DOCUMENT_V2 = "{\n"
+          + "        \"title\": \"Title\",\n"
+          + "        \"date\": \"2022-04-25\",\n"
+          + "        \"note\": \"Any note here\"\n"
+          + "}";
+
+  /**
    * @param args the command line arguments
    */
   public static void main(String[] args) throws IOException, DoipException {
@@ -126,7 +143,7 @@ public class Main {
             .create();
 
     AuthenticationInfo authInfo; // authInfo = new PasswordAuthenticationInfo("admin", "password");
-    String[] allClientIds = {"metastore_Schema_ID", "coscine_Schema_ID"};
+    String[] allClientIds = {"metastore_Schema_ID", "coscine_Schema_ID", "metastore_metadata_ID"};
     String clientId = allClientIds[0];
     authInfo = new TokenAuthenticationInfo(clientId, "myPersonalToken");
 //    authInfo = null;
@@ -141,6 +158,7 @@ public class Main {
     List<String> listOperations = client.listOperations(TARGET_ONE, authInfo, serviceInfo);
     System.out.println(listOperations);
     String id = "anyId";
+    String schemaId = null;
     String eTag = "anyETag";
     InputStream element = null;
     JsonReader reader;
@@ -151,6 +169,7 @@ public class Main {
       result = client.create(dobj, authInfo, serviceInfo);
       printResult(result);
       id = result.id;
+      schemaId = id;
       // Fetch also ETag from header
       eTag = result.attributes.getAsJsonObject("header").get("ETag").getAsString();
       printHeader("eTag = " + eTag);
@@ -295,6 +314,92 @@ public class Main {
     }
     printHeader("End of test for clientID: " + clientId);
 
+    /**
+     * ************************************************************************
+     * Test of next clientID (Metadata Documents 4 MetaStore)
+     */
+    clientId = allClientIds[2];
+    authInfo = new TokenAuthenticationInfo(clientId, "myPersonalToken");
+//    authInfo = null;
+
+    printHeader("HELLO " + clientId);
+
+    result = client.hello(TARGET_ONE, authInfo, serviceInfo);
+    printResult(result);
+
+    // Request 0.DOIP/Op.ListOperations
+    printHeader("LIST_OPERATIONS");
+    listOperations = client.listOperations(TARGET_ONE, authInfo, serviceInfo);
+    System.out.println(listOperations);
+    id = "anyId";
+    eTag = "anyETag";
+    element = null;
+    reader = null;
+    // Request 0.DOIP/Op.Create
+    if (listOperations.contains(DoipConstants.OP_CREATE)) {
+      printHeader("Create...");
+      dobj = createMetadataDocument(schemaId);
+      result = client.create(dobj, authInfo, serviceInfo);
+      printResult(result);
+      id = result.id;
+      // Fetch also ETag from header
+      eTag = result.attributes.getAsJsonObject("header").get("ETag").getAsString();
+      printHeader("eTag = " + eTag);
+    } else {
+      printHeader("Skip Create...");
+    }
+    if (listOperations.contains(DoipConstants.OP_RETRIEVE)) {
+      // Request 0.DOIP/Op.Retrieve
+      printHeader("Retrieve without elements!");
+      result = client.retrieve(id, false, authInfo, serviceInfo);
+      printResult(result);
+
+      printHeader("Retrieve all elements!");
+      result = client.retrieve(id, true, authInfo, serviceInfo);
+      printResult(result);
+
+      printHeader("Retrieve one element!");
+      element = client.retrieveElement(id, "document", authInfo, serviceInfo);
+      printResult(element);
+
+      printHeader("Retrieve metadata element!");
+      element = client.retrieveElement(id, "metadata", authInfo, serviceInfo);
+      printResult(element);
+      printHeader("Retrieve wrong element!");
+      element = client.retrieveElement(id, "invalidElement", authInfo, serviceInfo);
+      reader = new JsonReader(new InputStreamReader(element));
+      result = gson.fromJson(reader, DigitalObject.class);
+      printResult(result);
+    } else {
+      printHeader("Skip Retrieve...");
+    }
+    if (listOperations.contains(DoipConstants.OP_UPDATE)) {
+      // Request 0.DOIP/Op.Update
+      printHeader("update digital object");
+      DigitalObject updateSchema = updateMetadataDocument(id, schemaId, eTag);
+      updateSchema.id = id;
+      result = client.update(updateSchema, authInfo, serviceInfo);
+      printResult(result);
+    } else {
+      printHeader("Skip Update...");
+    }
+    if (listOperations.contains(DoipConstants.OP_SEARCH)) {
+      // Request 0.DOIP/Op.Update
+      printHeader("Search digital object");
+      DigitalObject updateSchema = updateSchema(id, eTag);
+      String query = "*";
+      SearchResults<DigitalObject> search = client.search(TARGET_ONE, query, null, authInfo, serviceInfo);
+      Iterator<DigitalObject> iterator = search.iterator();
+      printHeader("Search results: ");
+      while (iterator.hasNext()) {
+        printResult(iterator.next());
+      }
+    } else {
+      printHeader("Skip Search...");
+
+    }
+    printHeader("End of test for clientID: " + clientId);
+
     System.exit(0);
 
   }
@@ -344,6 +449,80 @@ public class Main {
     element.type = "application/json";
     element.in = new ByteArrayInputStream(JSON_SCHEMA_V2.getBytes());
     element.length = (long) JSON_SCHEMA_V2.getBytes().length;
+    dobj.elements.add(element);
+
+    return dobj;
+  }
+
+  private static DigitalObject createMetadataDocument(String schemaId) throws IOException {
+    Datacite43Schema datacite = new Datacite43Schema();
+    SimpleDateFormat sdf = new SimpleDateFormat("_yyyy_MM_dd_HH_mm");
+    Title title = new Title();
+    title.setTitle("document" + sdf.format(new Date()));
+    datacite.getTitles().add(title);
+    datacite.setPublisher("NFDI4Ing");
+    
+    RelatedIdentifier relId = new RelatedIdentifier();
+    relId.setRelatedIdentifier("http://example.org/relatedResource");
+    relId.setRelatedIdentifierType(RelatedIdentifier.RelatedIdentifierType.URL);
+    relId.setRelationType(RelatedIdentifier.RelationType.IS_METADATA_FOR);
+    datacite.getRelatedIdentifiers().add(relId);
+    
+    relId = new RelatedIdentifier();
+    relId.setRelatedIdentifier("http://localhost:8040/api/v1/schemas/" + schemaId);
+    relId.setRelatedIdentifierType(RelatedIdentifier.RelatedIdentifierType.URL);
+    relId.setRelationType(RelatedIdentifier.RelationType.IS_DERIVED_FROM);
+    datacite.getRelatedIdentifiers().add(relId);
+
+    String json = new Gson().toJson(datacite);
+    DigitalObject dobj = new DigitalObject();
+    dobj.attributes = new JsonObject();
+    dobj.attributes.addProperty("datacite", json);
+    dobj.elements = new ArrayList<>();
+    Element element = new Element();
+    element.id = "document";
+    element.type = "application/json";
+    element.in = new ByteArrayInputStream(JSON_DOCUMENT.getBytes());
+    element.length = (long) JSON_DOCUMENT.getBytes().length;
+    dobj.elements.add(element);
+
+    return dobj;
+  }
+
+  private static DigitalObject updateMetadataDocument(String id, String schemaId, String eTag) throws IOException {
+    Datacite43Schema datacite = new Datacite43Schema();
+    Title title = new Title();
+    title.setTitle(id);
+    datacite.getTitles().add(title);
+    datacite.setPublisher("NFDI4Ing");
+    
+    RelatedIdentifier relId = new RelatedIdentifier();
+    relId.setRelatedIdentifier("http://example.org/relatedResource");
+    relId.setRelatedIdentifierType(RelatedIdentifier.RelatedIdentifierType.URL);
+    relId.setRelationType(RelatedIdentifier.RelationType.IS_METADATA_FOR);
+    datacite.getRelatedIdentifiers().add(relId);
+    
+    relId = new RelatedIdentifier();
+    relId.setRelatedIdentifier("http://localhost:8040/api/v1/schemas/" + schemaId);
+    relId.setRelatedIdentifierType(RelatedIdentifier.RelatedIdentifierType.URL);
+    relId.setRelationType(RelatedIdentifier.RelationType.IS_DERIVED_FROM);
+    datacite.getRelatedIdentifiers().add(relId);
+
+    String json = new Gson().toJson(datacite);
+    DigitalObject dobj = new DigitalObject();
+    // id has to be set
+    dobj.id = id;
+    dobj.attributes = new JsonObject();
+    dobj.attributes.addProperty("datacite", json);
+    JsonObject header = new JsonObject();
+    header.addProperty("If-Match", eTag);
+    dobj.attributes.add("header", header);
+    dobj.elements = new ArrayList<>();
+    Element element = new Element();
+    element.id = "document";
+    element.type = "application/json";
+    element.in = new ByteArrayInputStream(JSON_DOCUMENT_V2.getBytes());
+    element.length = (long) JSON_DOCUMENT.getBytes().length;
     dobj.elements.add(element);
 
     return dobj;
