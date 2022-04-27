@@ -176,7 +176,7 @@ public class Main {
             .create();
 
     AuthenticationInfo authInfo; // authInfo = new PasswordAuthenticationInfo("admin", "password");
-    String[] allClientIds = {"metastore_Schema_ID", "coscine_Schema_ID", "metastore_metadata_ID"};
+    String[] allClientIds = {"metastore_Schema_ID", "coscine_Schema_ID", "metastore_metadata_ID", "coscine_Metadata_ID" };
     String clientId = allClientIds[0];
     authInfo = new TokenAuthenticationInfo(clientId, "myPersonalToken");
 //    authInfo = null;
@@ -451,7 +451,7 @@ public class Main {
     printHeader("LIST_OPERATIONS");
     listOperations = client.listOperations(TARGET_ONE, authInfo, serviceInfo);
     System.out.println(listOperations);
-    id = "anyId";
+    id = "62b97a86-d3cf-4517-9b09-6a09cd9b476d";
     eTag = "anyETag";
     element = null;
     reader = null;
