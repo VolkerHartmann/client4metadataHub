@@ -14,6 +14,8 @@ import edu.kit.datacite.kernel_4.RelatedIdentifier;
 import edu.kit.datacite.kernel_4.Title;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -126,11 +128,42 @@ public class Main {
 
   /**
    * @param args the command line arguments
+   * @throws java.io.IOException
+   * @throws net.dona.doip.client.DoipException
    */
   public static void main(String[] args) throws IOException, DoipException {
     // These values should be copied from DOIP configuration.
     String TARGET_ONE = "35.TEST/DOIPServer";
     int PORT = 8880;
+    String bearerToken = null;
+
+        System.out.println("Error reading " + args[0]);
+   if (args.length > 0) {
+      // Read bearer token from file...
+      InputStream inputStream = null;
+      try {
+        File file = new File(args[0]);
+        inputStream = new FileInputStream(file);
+
+        try ( BufferedReader br
+                = new BufferedReader(new InputStreamReader(inputStream))) {
+          String line;
+          line = br.readLine();
+          bearerToken = /*"bearer " + */line;
+        }
+      } catch (IOException ioe) {
+        System.out.println("Error reading " + args[0]);
+        bearerToken = "anInvalidToken";
+      } finally {
+        if (inputStream != null) {
+          try {
+            inputStream.close();
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+        }
+      }
+    }
 //    String TARGET_TWO = "36.TEST/DOIPServer";
     // TODO code application logic here
     DoipClient client = new DoipClient();
@@ -232,7 +265,7 @@ public class Main {
      * Test of next clientID (application profiles)
      */
     clientId = allClientIds[1];
-    authInfo = new TokenAuthenticationInfo(clientId, "myPersonalToken");
+    authInfo = new TokenAuthenticationInfo(clientId, bearerToken);
 //    authInfo = null;
 
     printHeader("HELLO " + clientId);
@@ -400,6 +433,93 @@ public class Main {
     }
     printHeader("End of test for clientID: " + clientId);
 
+
+    /**
+     * ************************************************************************
+     * Test of next clientID (Metadata Documents 4 MetaStore)
+     */
+    clientId = allClientIds[3];
+    authInfo = new TokenAuthenticationInfo(clientId, bearerToken);
+//    authInfo = null;
+
+    printHeader("HELLO " + clientId);
+
+    result = client.hello(TARGET_ONE, authInfo, serviceInfo);
+    printResult(result);
+
+    // Request 0.DOIP/Op.ListOperations
+    printHeader("LIST_OPERATIONS");
+    listOperations = client.listOperations(TARGET_ONE, authInfo, serviceInfo);
+    System.out.println(listOperations);
+    id = "anyId";
+    eTag = "anyETag";
+    element = null;
+    reader = null;
+    // Request 0.DOIP/Op.Create
+    if (listOperations.contains(DoipConstants.OP_CREATE)) {
+      printHeader("Create...");
+      dobj = createMetadataDocument(schemaId);
+      result = client.create(dobj, authInfo, serviceInfo);
+      printResult(result);
+      id = result.id;
+      // Fetch also ETag from header
+      eTag = result.attributes.getAsJsonObject("header").get("ETag").getAsString();
+      printHeader("eTag = " + eTag);
+    } else {
+      printHeader("Skip Create...");
+    }
+    if (listOperations.contains(DoipConstants.OP_RETRIEVE)) {
+      // Request 0.DOIP/Op.Retrieve
+      printHeader("Retrieve without elements!");
+      result = client.retrieve(id, false, authInfo, serviceInfo);
+      printResult(result);
+
+      printHeader("Retrieve all elements!");
+      result = client.retrieve(id, true, authInfo, serviceInfo);
+      printResult(result);
+
+      printHeader("Retrieve one element!");
+      element = client.retrieveElement(id, "document", authInfo, serviceInfo);
+      printResult(element);
+
+      printHeader("Retrieve metadata element!");
+      element = client.retrieveElement(id, "metadata", authInfo, serviceInfo);
+      printResult(element);
+      printHeader("Retrieve wrong element!");
+      element = client.retrieveElement(id, "invalidElement", authInfo, serviceInfo);
+      reader = new JsonReader(new InputStreamReader(element));
+      result = gson.fromJson(reader, DigitalObject.class);
+      printResult(result);
+    } else {
+      printHeader("Skip Retrieve...");
+    }
+    if (listOperations.contains(DoipConstants.OP_UPDATE)) {
+      // Request 0.DOIP/Op.Update
+      printHeader("update digital object");
+      DigitalObject updateSchema = updateMetadataDocument(id, schemaId, eTag);
+      updateSchema.id = id;
+      result = client.update(updateSchema, authInfo, serviceInfo);
+      printResult(result);
+    } else {
+      printHeader("Skip Update...");
+    }
+    if (listOperations.contains(DoipConstants.OP_SEARCH)) {
+      // Request 0.DOIP/Op.Update
+      printHeader("Search digital object");
+      DigitalObject updateSchema = updateSchema(id, eTag);
+      String query = "*";
+      SearchResults<DigitalObject> search = client.search(TARGET_ONE, query, null, authInfo, serviceInfo);
+      Iterator<DigitalObject> iterator = search.iterator();
+      printHeader("Search results: ");
+      while (iterator.hasNext()) {
+        printResult(iterator.next());
+      }
+    } else {
+      printHeader("Skip Search...");
+
+    }
+    printHeader("End of test for clientID: " + clientId);
+
     System.exit(0);
 
   }
@@ -461,13 +581,13 @@ public class Main {
     title.setTitle("document" + sdf.format(new Date()));
     datacite.getTitles().add(title);
     datacite.setPublisher("NFDI4Ing");
-    
+
     RelatedIdentifier relId = new RelatedIdentifier();
     relId.setRelatedIdentifier("http://example.org/relatedResource");
     relId.setRelatedIdentifierType(RelatedIdentifier.RelatedIdentifierType.URL);
     relId.setRelationType(RelatedIdentifier.RelationType.IS_METADATA_FOR);
     datacite.getRelatedIdentifiers().add(relId);
-    
+
     relId = new RelatedIdentifier();
     relId.setRelatedIdentifier("http://localhost:8040/api/v1/schemas/" + schemaId);
     relId.setRelatedIdentifierType(RelatedIdentifier.RelatedIdentifierType.URL);
@@ -495,13 +615,13 @@ public class Main {
     title.setTitle(id);
     datacite.getTitles().add(title);
     datacite.setPublisher("NFDI4Ing");
-    
+
     RelatedIdentifier relId = new RelatedIdentifier();
     relId.setRelatedIdentifier("http://example.org/relatedResource");
     relId.setRelatedIdentifierType(RelatedIdentifier.RelatedIdentifierType.URL);
     relId.setRelationType(RelatedIdentifier.RelationType.IS_METADATA_FOR);
     datacite.getRelatedIdentifiers().add(relId);
-    
+
     relId = new RelatedIdentifier();
     relId.setRelatedIdentifier("http://localhost:8040/api/v1/schemas/" + schemaId);
     relId.setRelatedIdentifierType(RelatedIdentifier.RelatedIdentifierType.URL);
