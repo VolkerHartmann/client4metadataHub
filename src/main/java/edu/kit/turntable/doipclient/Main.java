@@ -36,12 +36,18 @@ import net.dona.doip.client.Element;
 import net.dona.doip.client.SearchResults;
 import net.dona.doip.client.ServiceInfo;
 import net.dona.doip.client.TokenAuthenticationInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author hartmann-v
  */
 public class Main {
+  /**
+   * Logger.
+   */
+  private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
   /**
    * JSON schema which should be registered.
@@ -126,6 +132,24 @@ public class Main {
           + "        \"note\": \"Any note here\"\n"
           + "}";
 
+  private static final String COSCINE_METADATA_V1 = "{\n"
+          + "\"http://purl.org/dc/terms/creator\": [{\n"
+          + "\"value\": \"Volker Hartmann\",\n"
+          + "\"type\": \"literal\",\n"
+          + "      \"datatype\": \"http://www.w3.org/2001/XMLSchema#string\"\n"
+          + "    }],\n"
+          + "  \"http://purl.org/dc/terms/title\": [{\n"
+          + "      \"value\": \"Test\",\n"
+          + "      \"type\": \"literal\",\n"
+          + "      \"datatype\": \"http://www.w3.org/2001/XMLSchema#string\"\n"
+          + "    }],\n"
+          + "  \"http://purl.org/dc/terms/created\": [{\n"
+          + "      \"value\": \"2022-05-02\",\n"
+          + "      \"type\": \"literal\",\n"
+          + "      \"datatype\": \"http://www.w3.org/2001/XMLSchema#date\"\n"
+          + "    }]\n"
+          + "}\n";
+
   /**
    * @param args the command line arguments
    * @throws java.io.IOException
@@ -136,9 +160,18 @@ public class Main {
     String TARGET_ONE = "35.TEST/DOIPServer";
     int PORT = 8880;
     String bearerToken = null;
+    // Flag for skipping tests for mapping
+    boolean skip;
+    List<String> listOperations;
+    DigitalObject result;
+    String id = "anyId";
+    String schemaId = null;
+    String eTag = "anyETag";
+    InputStream element = null;
+    JsonReader reader;
 
-        System.out.println("Error reading " + args[0]);
-   if (args.length > 0) {
+    System.out.println("Error reading " + args[0]);
+    if (args.length > 0) {
       // Read bearer token from file...
       InputStream inputStream = null;
       try {
@@ -149,7 +182,7 @@ public class Main {
                 = new BufferedReader(new InputStreamReader(inputStream))) {
           String line;
           line = br.readLine();
-          bearerToken = /*"bearer " + */line;
+          bearerToken = /*"bearer " + */ line;
         }
       } catch (IOException ioe) {
         System.out.println("Error reading " + args[0]);
@@ -176,350 +209,374 @@ public class Main {
             .create();
 
     AuthenticationInfo authInfo; // authInfo = new PasswordAuthenticationInfo("admin", "password");
-    String[] allClientIds = {"metastore_Schema_ID", "coscine_Schema_ID", "metastore_metadata_ID", "coscine_Metadata_ID" };
+    String[] allClientIds = {"!metastore_Schema_ID", "!coscine_Schema_ID", "!metastore_metadata_ID", "coscine_Metadata_ID"};
     String clientId = allClientIds[0];
+    skip = false;
+    if (clientId.startsWith("!")) {
+      clientId = clientId.substring(1);
+      skip = true;
+      printHeader("Skip tests for " + clientId);
+    }
     authInfo = new TokenAuthenticationInfo(clientId, "myPersonalToken");
 //    authInfo = null;
+    if (!skip) {
+      printHeader("HELLO " + clientId);
 
-    printHeader("HELLO " + clientId);
-
-    DigitalObject result = client.hello(TARGET_ONE, authInfo, serviceInfo);
-    printResult(result);
-
-    // Request 0.DOIP/Op.ListOperations
-    printHeader("LIST_OPERATIONS");
-    List<String> listOperations = client.listOperations(TARGET_ONE, authInfo, serviceInfo);
-    System.out.println(listOperations);
-    String id = "anyId";
-    String schemaId = null;
-    String eTag = "anyETag";
-    InputStream element = null;
-    JsonReader reader;
-    // Request 0.DOIP/Op.Create
-    if (listOperations.contains(DoipConstants.OP_CREATE)) {
-      printHeader("Create...");
-      dobj = createSchema();
-      result = client.create(dobj, authInfo, serviceInfo);
-      printResult(result);
-      id = result.id;
-      schemaId = id;
-      // Fetch also ETag from header
-      eTag = result.attributes.getAsJsonObject("header").get("ETag").getAsString();
-      printHeader("eTag = " + eTag);
-    } else {
-      printHeader("Skip Create...");
-    }
-    if (listOperations.contains(DoipConstants.OP_RETRIEVE)) {
-      // Request 0.DOIP/Op.Retrieve
-      printHeader("Retrieve without elements!");
-      result = client.retrieve(id, false, authInfo, serviceInfo);
+      result = client.hello(TARGET_ONE, authInfo, serviceInfo);
       printResult(result);
 
-      printHeader("Retrieve all elements!");
-      result = client.retrieve(id, true, authInfo, serviceInfo);
-      printResult(result);
-
-      printHeader("Retrieve one element!");
-      element = client.retrieveElement(id, "schema", authInfo, serviceInfo);
-      printResult(element);
-
-      printHeader("Retrieve metadata element!");
-      element = client.retrieveElement(id, "metadata", authInfo, serviceInfo);
-      printResult(element);
-      printHeader("Retrieve wrong element!");
-      element = client.retrieveElement(id, "invalidElement", authInfo, serviceInfo);
-      reader = new JsonReader(new InputStreamReader(element));
-      result = gson.fromJson(reader, DigitalObject.class);
-      printResult(result);
-    } else {
-      printHeader("Skip Retrieve...");
-    }
-    if (listOperations.contains(DoipConstants.OP_UPDATE)) {
-      // Request 0.DOIP/Op.Update
-      printHeader("update digital object");
-      DigitalObject updateSchema = updateSchema(id, eTag);
-      result = client.update(updateSchema, authInfo, serviceInfo);
-      printResult(result);
-    } else {
-      printHeader("Skip Update...");
-    }
-    if (listOperations.contains(DoipConstants.OP_SEARCH)) {
-      // Request 0.DOIP/Op.Update
-      printHeader("Search digital object");
-      DigitalObject updateSchema = updateSchema(id, eTag);
-      String query = "*";
-      SearchResults<DigitalObject> search = client.search(TARGET_ONE, query, null, authInfo, serviceInfo);
-      Iterator<DigitalObject> iterator = search.iterator();
-      printHeader("Search results: ");
-      while (iterator.hasNext()) {
-        printResult(iterator.next());
+      // Request 0.DOIP/Op.ListOperations
+      printHeader("LIST_OPERATIONS");
+      listOperations = client.listOperations(TARGET_ONE, authInfo, serviceInfo);
+      System.out.println(listOperations);
+      // Request 0.DOIP/Op.Create
+      if (listOperations.contains(DoipConstants.OP_CREATE)) {
+        printHeader("Create...");
+        dobj = createSchema();
+        result = client.create(dobj, authInfo, serviceInfo);
+        printResult(result);
+        id = result.id;
+        schemaId = id;
+        // Fetch also ETag from header
+        eTag = result.attributes.getAsJsonObject("header").get("ETag").getAsString();
+        printHeader("eTag = " + eTag);
+      } else {
+        printHeader("Skip Create...");
       }
-    } else {
-      printHeader("Skip Search...");
+      if (listOperations.contains(DoipConstants.OP_RETRIEVE)) {
+        // Request 0.DOIP/Op.Retrieve
+        printHeader("Retrieve without elements!");
+        result = client.retrieve(id, false, authInfo, serviceInfo);
+        printResult(result);
 
+        printHeader("Retrieve all elements!");
+        result = client.retrieve(id, true, authInfo, serviceInfo);
+        printResult(result);
+
+        printHeader("Retrieve one element!");
+        element = client.retrieveElement(id, "schema", authInfo, serviceInfo);
+        printResult(element);
+
+        printHeader("Retrieve metadata element!");
+        element = client.retrieveElement(id, "metadata", authInfo, serviceInfo);
+        printResult(element);
+        printHeader("Retrieve wrong element!");
+        element = client.retrieveElement(id, "invalidElement", authInfo, serviceInfo);
+        reader = new JsonReader(new InputStreamReader(element));
+        result = gson.fromJson(reader, DigitalObject.class);
+        printResult(result);
+      } else {
+        printHeader("Skip Retrieve...");
+      }
+      if (listOperations.contains(DoipConstants.OP_UPDATE)) {
+        // Request 0.DOIP/Op.Update
+        printHeader("update digital object");
+        DigitalObject updateSchema = updateSchema(id, eTag);
+        result = client.update(updateSchema, authInfo, serviceInfo);
+        printResult(result);
+      } else {
+        printHeader("Skip Update...");
+      }
+      if (listOperations.contains(DoipConstants.OP_SEARCH)) {
+        // Request 0.DOIP/Op.Update
+        printHeader("Search digital object");
+        DigitalObject updateSchema = updateSchema(id, eTag);
+        String query = "*";
+        SearchResults<DigitalObject> search = client.search(TARGET_ONE, query, null, authInfo, serviceInfo);
+        Iterator<DigitalObject> iterator = search.iterator();
+        printHeader("Search results: ");
+        while (iterator.hasNext()) {
+          printResult(iterator.next());
+        }
+      } else {
+        printHeader("Skip Search...");
+
+      }
+      printHeader("End of test for clientID: " + clientId);
     }
-    printHeader("End of test for clientID: " + clientId);
-
     /**
      * ************************************************************************
      * Test of next clientID (application profiles)
      */
     clientId = allClientIds[1];
+    skip = false;
+    if (clientId.startsWith("!")) {
+      clientId = clientId.substring(1);
+      skip = true;
+      printHeader("Skip tests for " + clientId);
+    }
     authInfo = new TokenAuthenticationInfo(clientId, bearerToken);
 //    authInfo = null;
 
-    printHeader("HELLO " + clientId);
+    if (!skip) {
+      printHeader("HELLO " + clientId);
 
-    result = client.hello(TARGET_ONE, authInfo, serviceInfo);
-    printResult(result);
+      result = client.hello(TARGET_ONE, authInfo, serviceInfo);
+      printResult(result);
 
-    // Request 0.DOIP/Op.ListOperations
-    printHeader("LIST_OPERATIONS");
-    listOperations = client.listOperations(TARGET_ONE, authInfo, serviceInfo);
-    System.out.println(listOperations);
+      // Request 0.DOIP/Op.ListOperations
+      printHeader("LIST_OPERATIONS");
+      listOperations = client.listOperations(TARGET_ONE, authInfo, serviceInfo);
+      System.out.println(listOperations);
 
-    if (listOperations.contains(DoipConstants.OP_CREATE)) {
-      // Request 0.DOIP/Op.Create
+      if (listOperations.contains(DoipConstants.OP_CREATE)) {
+        // Request 0.DOIP/Op.Create
 /////////////////////////////////////////////////////////////////////////
 // Skip create for the moment.
 /////////////////////////////////////////////////////////////////////////
-      printHeader("Create...");
-      dobj = createSchema();
-      result = client.create(dobj, authInfo, serviceInfo);
-      printResult(result);
-      id = result.id;
-      // Fetch also ETag from header
-      eTag = result.attributes.getAsJsonObject("header").get("ETag").getAsString();
-      printHeader("eTag = " + eTag);
-    } else {
-      printHeader("Skip Create...");
-    }
-    if (listOperations.contains(DoipConstants.OP_RETRIEVE)) {
-      // Request 0.DOIP/Op.Retrieve
-      id = new String("https://purl.org/coscine/ap/radar/");
-      printHeader("Retrieve without elements!");
-      result = client.retrieve(id, false, authInfo, serviceInfo);
-      printResult(result);
-
-      printHeader("Retrieve all elements!");
-      result = client.retrieve(id, true, authInfo, serviceInfo);
-      printResult(result);
-
-      printHeader("Retrieve one element!");
-      element = client.retrieveElement(id, "schema", authInfo, serviceInfo);
-      printResult(element);
-
-      printHeader("Retrieve metadata element!");
-      element = client.retrieveElement(id, "metadata", authInfo, serviceInfo);
-      printResult(element);
-      printHeader("Retrieve wrong element!");
-      element = client.retrieveElement(id, "invalidElement", authInfo, serviceInfo);
-      reader = new JsonReader(new InputStreamReader(element));
-      result = gson.fromJson(reader, DigitalObject.class);
-      printResult(result);
-    } else {
-      printHeader("Skip Retrieve...");
-    }
-    if (listOperations.contains(DoipConstants.OP_UPDATE)) {
-      // Request 0.DOIP/Op.Update
-      printHeader("Update digital object");
-      DigitalObject updateSchema = updateSchema(id, eTag);
-      result = client.update(updateSchema, authInfo, serviceInfo);
-      printResult(result);
-    } else {
-      printHeader("Skip Update...");
-
-    }
-    if (listOperations.contains(DoipConstants.OP_SEARCH)) {
-      // Request 0.DOIP/Op.Update
-      printHeader("Search digital object");
-      DigitalObject updateSchema = updateSchema(id, eTag);
-      String query = "*";
-      SearchResults<DigitalObject> search = client.search(TARGET_ONE, query, null, authInfo, serviceInfo);
-      Iterator<DigitalObject> iterator = search.iterator();
-      printHeader("Search results: ");
-      while (iterator.hasNext()) {
-        printResult(iterator.next());
+        printHeader("Create...");
+        dobj = createSchema();
+        result = client.create(dobj, authInfo, serviceInfo);
+        printResult(result);
+        id = result.id;
+        // Fetch also ETag from header
+        eTag = result.attributes.getAsJsonObject("header").get("ETag").getAsString();
+        printHeader("eTag = " + eTag);
+      } else {
+        printHeader("Skip Create...");
       }
-    } else {
-      printHeader("Skip Search...");
+      if (listOperations.contains(DoipConstants.OP_RETRIEVE)) {
+        // Request 0.DOIP/Op.Retrieve
+        id = new String("https://purl.org/coscine/ap/radar/");
+        printHeader("Retrieve without elements!");
+        result = client.retrieve(id, false, authInfo, serviceInfo);
+        printResult(result);
 
+        printHeader("Retrieve all elements!");
+        result = client.retrieve(id, true, authInfo, serviceInfo);
+        printResult(result);
+
+        printHeader("Retrieve one element!");
+        element = client.retrieveElement(id, "schema", authInfo, serviceInfo);
+        printResult(element);
+
+        printHeader("Retrieve metadata element!");
+        element = client.retrieveElement(id, "metadata", authInfo, serviceInfo);
+        printResult(element);
+        printHeader("Retrieve wrong element!");
+        element = client.retrieveElement(id, "invalidElement", authInfo, serviceInfo);
+        reader = new JsonReader(new InputStreamReader(element));
+        result = gson.fromJson(reader, DigitalObject.class);
+        printResult(result);
+      } else {
+        printHeader("Skip Retrieve...");
+      }
+      if (listOperations.contains(DoipConstants.OP_UPDATE)) {
+        // Request 0.DOIP/Op.Update
+        printHeader("Update digital object");
+        DigitalObject updateSchema = updateSchema(id, eTag);
+        result = client.update(updateSchema, authInfo, serviceInfo);
+        printResult(result);
+      } else {
+        printHeader("Skip Update...");
+
+      }
+      if (listOperations.contains(DoipConstants.OP_SEARCH)) {
+        // Request 0.DOIP/Op.Update
+        printHeader("Search digital object");
+        DigitalObject updateSchema = updateSchema(id, eTag);
+        String query = "*";
+        SearchResults<DigitalObject> search = client.search(TARGET_ONE, query, null, authInfo, serviceInfo);
+        Iterator<DigitalObject> iterator = search.iterator();
+        printHeader("Search results: ");
+        while (iterator.hasNext()) {
+          printResult(iterator.next());
+        }
+      } else {
+        printHeader("Skip Search...");
+
+      }
+      printHeader("End of test for clientID: " + clientId);
     }
-    printHeader("End of test for clientID: " + clientId);
-
     /**
      * ************************************************************************
      * Test of next clientID (Metadata Documents 4 MetaStore)
      */
     clientId = allClientIds[2];
+    skip = false;
+    if (clientId.startsWith("!")) {
+      clientId = clientId.substring(1);
+      skip = true;
+      printHeader("Skip tests for " + clientId);
+    }
     authInfo = new TokenAuthenticationInfo(clientId, "myPersonalToken");
 //    authInfo = null;
 
-    printHeader("HELLO " + clientId);
+    if (!skip) {
+      printHeader("HELLO " + clientId);
 
-    result = client.hello(TARGET_ONE, authInfo, serviceInfo);
-    printResult(result);
+      result = client.hello(TARGET_ONE, authInfo, serviceInfo);
+      printResult(result);
 
-    // Request 0.DOIP/Op.ListOperations
-    printHeader("LIST_OPERATIONS");
-    listOperations = client.listOperations(TARGET_ONE, authInfo, serviceInfo);
-    System.out.println(listOperations);
-    id = "anyId";
-    eTag = "anyETag";
-    element = null;
-    reader = null;
-    // Request 0.DOIP/Op.Create
-    if (listOperations.contains(DoipConstants.OP_CREATE)) {
-      printHeader("Create...");
+      // Request 0.DOIP/Op.ListOperations
+      printHeader("LIST_OPERATIONS");
+      listOperations = client.listOperations(TARGET_ONE, authInfo, serviceInfo);
+      System.out.println(listOperations);
+      id = "anyId";
+      eTag = "anyETag";
+      element = null;
+      reader = null;
+      // Request 0.DOIP/Op.Create
+      if (listOperations.contains(DoipConstants.OP_CREATE)) {
+        printHeader("Create...");
       dobj = createMetadataDocument(schemaId);
-      result = client.create(dobj, authInfo, serviceInfo);
-      printResult(result);
-      id = result.id;
-      // Fetch also ETag from header
-      eTag = result.attributes.getAsJsonObject("header").get("ETag").getAsString();
-      printHeader("eTag = " + eTag);
-    } else {
-      printHeader("Skip Create...");
-    }
-    if (listOperations.contains(DoipConstants.OP_RETRIEVE)) {
-      // Request 0.DOIP/Op.Retrieve
-      printHeader("Retrieve without elements!");
-      result = client.retrieve(id, false, authInfo, serviceInfo);
-      printResult(result);
-
-      printHeader("Retrieve all elements!");
-      result = client.retrieve(id, true, authInfo, serviceInfo);
-      printResult(result);
-
-      printHeader("Retrieve one element!");
-      element = client.retrieveElement(id, "document", authInfo, serviceInfo);
-      printResult(element);
-
-      printHeader("Retrieve metadata element!");
-      element = client.retrieveElement(id, "metadata", authInfo, serviceInfo);
-      printResult(element);
-      printHeader("Retrieve wrong element!");
-      element = client.retrieveElement(id, "invalidElement", authInfo, serviceInfo);
-      reader = new JsonReader(new InputStreamReader(element));
-      result = gson.fromJson(reader, DigitalObject.class);
-      printResult(result);
-    } else {
-      printHeader("Skip Retrieve...");
-    }
-    if (listOperations.contains(DoipConstants.OP_UPDATE)) {
-      // Request 0.DOIP/Op.Update
-      printHeader("update digital object");
-      DigitalObject updateSchema = updateMetadataDocument(id, schemaId, eTag);
-      updateSchema.id = id;
-      result = client.update(updateSchema, authInfo, serviceInfo);
-      printResult(result);
-    } else {
-      printHeader("Skip Update...");
-    }
-    if (listOperations.contains(DoipConstants.OP_SEARCH)) {
-      // Request 0.DOIP/Op.Update
-      printHeader("Search digital object");
-      DigitalObject updateSchema = updateSchema(id, eTag);
-      String query = "*";
-      SearchResults<DigitalObject> search = client.search(TARGET_ONE, query, null, authInfo, serviceInfo);
-      Iterator<DigitalObject> iterator = search.iterator();
-      printHeader("Search results: ");
-      while (iterator.hasNext()) {
-        printResult(iterator.next());
+        result = client.create(dobj, authInfo, serviceInfo);
+        printResult(result);
+        id = result.id;
+        // Fetch also ETag from header
+        eTag = result.attributes.getAsJsonObject("header").get("ETag").getAsString();
+        printHeader("eTag = " + eTag);
+      } else {
+        printHeader("Skip Create...");
       }
-    } else {
-      printHeader("Skip Search...");
+      if (listOperations.contains(DoipConstants.OP_RETRIEVE)) {
+        // Request 0.DOIP/Op.Retrieve
+        printHeader("Retrieve without elements!");
+        result = client.retrieve(id, false, authInfo, serviceInfo);
+        printResult(result);
 
+        printHeader("Retrieve all elements!");
+        result = client.retrieve(id, true, authInfo, serviceInfo);
+        printResult(result);
+
+        printHeader("Retrieve one element!");
+        element = client.retrieveElement(id, "document", authInfo, serviceInfo);
+        printResult(element);
+
+        printHeader("Retrieve metadata element!");
+        element = client.retrieveElement(id, "metadata", authInfo, serviceInfo);
+        printResult(element);
+        printHeader("Retrieve wrong element!");
+        element = client.retrieveElement(id, "invalidElement", authInfo, serviceInfo);
+        reader = new JsonReader(new InputStreamReader(element));
+        result = gson.fromJson(reader, DigitalObject.class);
+        printResult(result);
+      } else {
+        printHeader("Skip Retrieve...");
+      }
+      if (listOperations.contains(DoipConstants.OP_UPDATE)) {
+        // Request 0.DOIP/Op.Update
+        printHeader("update digital object");
+        DigitalObject updateSchema = updateMetadataDocument(id, schemaId, eTag);
+        updateSchema.id = id;
+        result = client.update(updateSchema, authInfo, serviceInfo);
+        printResult(result);
+      } else {
+        printHeader("Skip Update...");
+      }
+      if (listOperations.contains(DoipConstants.OP_SEARCH)) {
+        // Request 0.DOIP/Op.Update
+        printHeader("Search digital object");
+        DigitalObject updateSchema = updateSchema(id, eTag);
+        String query = "*";
+        SearchResults<DigitalObject> search = client.search(TARGET_ONE, query, null, authInfo, serviceInfo);
+        Iterator<DigitalObject> iterator = search.iterator();
+        printHeader("Search results: ");
+        while (iterator.hasNext()) {
+          printResult(iterator.next());
+        }
+      } else {
+        printHeader("Skip Search...");
+
+      }
+      printHeader("End of test for clientID: " + clientId);
     }
-    printHeader("End of test for clientID: " + clientId);
-
-
     /**
      * ************************************************************************
      * Test of next clientID (Metadata Documents 4 MetaStore)
      */
     clientId = allClientIds[3];
+    skip = false;
+    if (clientId.startsWith("!")) {
+      clientId = clientId.substring(1);
+      skip = true;
+      printHeader("Skip tests for " + clientId);
+    }
     authInfo = new TokenAuthenticationInfo(clientId, bearerToken);
 //    authInfo = null;
 
-    printHeader("HELLO " + clientId);
+    if (!skip) {
+      printHeader("HELLO " + clientId);
 
-    result = client.hello(TARGET_ONE, authInfo, serviceInfo);
-    printResult(result);
-
-    // Request 0.DOIP/Op.ListOperations
-    printHeader("LIST_OPERATIONS");
-    listOperations = client.listOperations(TARGET_ONE, authInfo, serviceInfo);
-    System.out.println(listOperations);
-    id = "62b97a86-d3cf-4517-9b09-6a09cd9b476d";
-    eTag = "anyETag";
-    element = null;
-    reader = null;
-    // Request 0.DOIP/Op.Create
-    if (listOperations.contains(DoipConstants.OP_CREATE)) {
-      printHeader("Create...");
-      dobj = createMetadataDocument(schemaId);
-      result = client.create(dobj, authInfo, serviceInfo);
-      printResult(result);
-      id = result.id;
-      // Fetch also ETag from header
-      eTag = result.attributes.getAsJsonObject("header").get("ETag").getAsString();
-      printHeader("eTag = " + eTag);
-    } else {
-      printHeader("Skip Create...");
-    }
-    if (listOperations.contains(DoipConstants.OP_RETRIEVE)) {
-      // Request 0.DOIP/Op.Retrieve
-      printHeader("Retrieve without elements!");
-      result = client.retrieve(id, false, authInfo, serviceInfo);
+      result = client.hello(TARGET_ONE, authInfo, serviceInfo);
       printResult(result);
 
-      printHeader("Retrieve all elements!");
-      result = client.retrieve(id, true, authInfo, serviceInfo);
-      printResult(result);
-
-      printHeader("Retrieve one element!");
-      element = client.retrieveElement(id, "document", authInfo, serviceInfo);
-      printResult(element);
-
-      printHeader("Retrieve metadata element!");
-      element = client.retrieveElement(id, "metadata", authInfo, serviceInfo);
-      printResult(element);
-      printHeader("Retrieve wrong element!");
-      element = client.retrieveElement(id, "invalidElement", authInfo, serviceInfo);
-      reader = new JsonReader(new InputStreamReader(element));
-      result = gson.fromJson(reader, DigitalObject.class);
-      printResult(result);
-    } else {
-      printHeader("Skip Retrieve...");
-    }
-    if (listOperations.contains(DoipConstants.OP_UPDATE)) {
-      // Request 0.DOIP/Op.Update
-      printHeader("update digital object");
-      DigitalObject updateSchema = updateMetadataDocument(id, schemaId, eTag);
-      updateSchema.id = id;
-      result = client.update(updateSchema, authInfo, serviceInfo);
-      printResult(result);
-    } else {
-      printHeader("Skip Update...");
-    }
-    if (listOperations.contains(DoipConstants.OP_SEARCH)) {
-      // Request 0.DOIP/Op.Update
-      printHeader("Search digital object");
-      DigitalObject updateSchema = updateSchema(id, eTag);
-      String query = "*";
-      SearchResults<DigitalObject> search = client.search(TARGET_ONE, query, null, authInfo, serviceInfo);
-      Iterator<DigitalObject> iterator = search.iterator();
-      printHeader("Search results: ");
-      while (iterator.hasNext()) {
-        printResult(iterator.next());
+      // Request 0.DOIP/Op.ListOperations
+      printHeader("LIST_OPERATIONS");
+      listOperations = client.listOperations(TARGET_ONE, authInfo, serviceInfo);
+      System.out.println(listOperations);
+      id = "62b97a86-d3cf-4517-9b09-6a09cd9b476d";
+      id = "21.11102/62b97a86-d3cf-4517-9b09-6a09cd9b476d#path=/newfile.txt";
+//      id = "62b97a86-d3cf-4517-9b09-6a09cd9b476d?path=/coscine_upload.txt";
+      eTag = "anyETag";
+      element = null;
+      reader = null;
+      // Request 0.DOIP/Op.Create
+      if (listOperations.contains(DoipConstants.OP_CREATE)) {
+        printHeader("Create...");
+        dobj = createMetadataDocument4Coscine();
+        dobj.id = id;
+        result = client.create(dobj, authInfo, serviceInfo);
+        printResult(result);
+        id = result.id;
+        // Fetch also ETag from header
+        eTag = result.attributes.getAsJsonObject("header").get("ETag").getAsString();
+        printHeader("eTag = " + eTag);
+      } else {
+        printHeader("Skip Create...");
       }
-    } else {
-      printHeader("Skip Search...");
+      if (listOperations.contains(DoipConstants.OP_RETRIEVE)) {
+        // Request 0.DOIP/Op.Retrieve
+        printHeader("Retrieve without elements!");
+        result = client.retrieve(id, false, authInfo, serviceInfo);
+        printResult(result);
 
+        printHeader("Retrieve all elements!");
+        result = client.retrieve(id, true, authInfo, serviceInfo);
+        printResult(result);
+
+        printHeader("Retrieve one element!");
+        element = client.retrieveElement(id, "document", authInfo, serviceInfo);
+        printResult(element);
+
+        printHeader("Retrieve metadata element!");
+        element = client.retrieveElement(id, "metadata", authInfo, serviceInfo);
+        printResult(element);
+        printHeader("Retrieve wrong element!");
+        element = client.retrieveElement(id, "invalidElement", authInfo, serviceInfo);
+        reader = new JsonReader(new InputStreamReader(element));
+        result = gson.fromJson(reader, DigitalObject.class);
+        printResult(result);
+      } else {
+        printHeader("Skip Retrieve...");
+      }
+      if (listOperations.contains(DoipConstants.OP_UPDATE)) {
+        // Request 0.DOIP/Op.Update
+        printHeader("update digital object");
+        DigitalObject updateSchema = updateMetadataDocument(id, schemaId, eTag);
+        updateSchema.id = id;
+        result = client.update(updateSchema, authInfo, serviceInfo);
+        printResult(result);
+      } else {
+        printHeader("Skip Update...");
+      }
+      if (listOperations.contains(DoipConstants.OP_SEARCH)) {
+        // Request 0.DOIP/Op.Update
+        printHeader("Search digital object");
+        DigitalObject updateSchema = updateSchema(id, eTag);
+        String query = "*";
+        SearchResults<DigitalObject> search = client.search(TARGET_ONE, query, null, authInfo, serviceInfo);
+        Iterator<DigitalObject> iterator = search.iterator();
+        printHeader("Search results: ");
+        while (iterator.hasNext()) {
+          printResult(iterator.next());
+        }
+      } else {
+        printHeader("Skip Search...");
+
+      }
+      printHeader("End of test for clientID: " + clientId);
     }
-    printHeader("End of test for clientID: " + clientId);
-
     System.exit(0);
 
   }
@@ -609,6 +666,29 @@ public class Main {
     return dobj;
   }
 
+  private static DigitalObject createMetadataDocument4Coscine() throws IOException {
+    Datacite43Schema datacite = new Datacite43Schema();
+    SimpleDateFormat sdf = new SimpleDateFormat("_yyyy_MM_dd_HH_mm");
+    Title title = new Title();
+    title.setTitle("document" + sdf.format(new Date()));
+    datacite.getTitles().add(title);
+    datacite.setPublisher("NFDI4Ing");
+
+    String json = new Gson().toJson(datacite);
+    DigitalObject dobj = new DigitalObject();
+    dobj.attributes = new JsonObject();
+    dobj.attributes.addProperty("datacite", json);
+    dobj.elements = new ArrayList<>();
+    Element element = new Element();
+    element.id = "document";
+    element.type = "application/json";
+    element.in = new ByteArrayInputStream(COSCINE_METADATA_V1.getBytes());
+    element.length = (long) COSCINE_METADATA_V1.getBytes().length;
+    dobj.elements.add(element);
+
+    return dobj;
+  }
+
   private static DigitalObject updateMetadataDocument(String id, String schemaId, String eTag) throws IOException {
     Datacite43Schema datacite = new Datacite43Schema();
     Title title = new Title();
@@ -671,7 +751,7 @@ public class Main {
       }
     }
   }
-
+  
   private static void printResult(InputStream inputStream) throws IOException {
     StringBuilder textBuilder = new StringBuilder("stream: '");
     if (inputStream != null) {
@@ -688,5 +768,4 @@ public class Main {
     textBuilder.append("'");
     System.out.println(textBuilder.toString());
   }
-
 }
