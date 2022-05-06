@@ -134,12 +134,12 @@ public class Main {
 
   private static final String COSCINE_METADATA_V1 = "{\n"
           + "\"http://purl.org/dc/terms/creator\": [{\n"
-          + "\"value\": \"Volker Hartmann\",\n"
+          + "\"value\": \"Volker Hartmann via turntablea<\",\n"
           + "\"type\": \"literal\",\n"
           + "      \"datatype\": \"http://www.w3.org/2001/XMLSchema#string\"\n"
           + "    }],\n"
           + "  \"http://purl.org/dc/terms/title\": [{\n"
-          + "      \"value\": \"Test\",\n"
+          + "      \"value\": \"Test with turntable!\",\n"
           + "      \"type\": \"literal\",\n"
           + "      \"datatype\": \"http://www.w3.org/2001/XMLSchema#string\"\n"
           + "    }],\n"
@@ -162,7 +162,7 @@ public class Main {
     String bearerToken = null;
     // Flag for skipping tests for mapping
     boolean skip;
-    List<String> listOperations;
+    List<String> listOperations = new ArrayList<>();
     DigitalObject result;
     String id = "anyId";
     String schemaId = null;
@@ -551,6 +551,7 @@ public class Main {
         printHeader("Skip Retrieve...");
       }
       if (listOperations.contains(DoipConstants.OP_UPDATE)) {
+        id = "21.11102/62b97a86-d3cf-4517-9b09-6a09cd9b476d#path=/TestTheREST.txt";
         // Request 0.DOIP/Op.Update
         printHeader("update digital object");
         DigitalObject updateSchema = updateMetadataDocument(id, schemaId, eTag);
@@ -723,6 +724,29 @@ public class Main {
     element.type = "application/json";
     element.in = new ByteArrayInputStream(JSON_DOCUMENT_V2.getBytes());
     element.length = (long) JSON_DOCUMENT.getBytes().length;
+    dobj.elements.add(element);
+
+    return dobj;
+  }
+
+  private static DigitalObject updateMetadataDocument4Coscine() throws IOException {
+    Datacite43Schema datacite = new Datacite43Schema();
+    SimpleDateFormat sdf = new SimpleDateFormat("_yyyy_MM_dd_HH_mm");
+    Title title = new Title();
+    title.setTitle("document" + sdf.format(new Date()));
+    datacite.getTitles().add(title);
+    datacite.setPublisher("NFDI4Ing");
+
+    String json = new Gson().toJson(datacite);
+    DigitalObject dobj = new DigitalObject();
+    dobj.attributes = new JsonObject();
+    dobj.attributes.addProperty("datacite", json);
+    dobj.elements = new ArrayList<>();
+    Element element = new Element();
+    element.id = "document";
+    element.type = "application/json";
+    element.in = new ByteArrayInputStream(COSCINE_METADATA_V1.getBytes());
+    element.length = (long) COSCINE_METADATA_V1.getBytes().length;
     dobj.elements.add(element);
 
     return dobj;
