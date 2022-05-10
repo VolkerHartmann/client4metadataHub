@@ -134,7 +134,7 @@ public class Main {
 
   private static final String COSCINE_METADATA_V1 = "{\n"
           + "\"http://purl.org/dc/terms/creator\": [{\n"
-          + "\"value\": \"Volker Hartmann via turntablea<\",\n"
+          + "\"value\": \"Volker Hartmann via turntable\",\n"
           + "\"type\": \"literal\",\n"
           + "      \"datatype\": \"http://www.w3.org/2001/XMLSchema#string\"\n"
           + "    }],\n"
@@ -145,6 +145,24 @@ public class Main {
           + "    }],\n"
           + "  \"http://purl.org/dc/terms/created\": [{\n"
           + "      \"value\": \"2022-05-02\",\n"
+          + "      \"type\": \"literal\",\n"
+          + "      \"datatype\": \"http://www.w3.org/2001/XMLSchema#date\"\n"
+          + "    }]\n"
+          + "}\n";
+
+  private static final String COSCINE_METADATA_V2 = "{\n"
+          + "\"http://purl.org/dc/terms/creator\": [{\n"
+          + "\"value\": \"Volker Hartmann via turntable next version\",\n"
+          + "\"type\": \"literal\",\n"
+          + "      \"datatype\": \"http://www.w3.org/2001/XMLSchema#string\"\n"
+          + "    }],\n"
+          + "  \"http://purl.org/dc/terms/title\": [{\n"
+          + "      \"value\": \"Test update with turntable!\",\n"
+          + "      \"type\": \"literal\",\n"
+          + "      \"datatype\": \"http://www.w3.org/2001/XMLSchema#string\"\n"
+          + "    }],\n"
+          + "  \"http://purl.org/dc/terms/created\": [{\n"
+          + "      \"value\": \"2022-05-10\",\n"
           + "      \"type\": \"literal\",\n"
           + "      \"datatype\": \"http://www.w3.org/2001/XMLSchema#date\"\n"
           + "    }]\n"
@@ -209,7 +227,13 @@ public class Main {
             .create();
 
     AuthenticationInfo authInfo; // authInfo = new PasswordAuthenticationInfo("admin", "password");
-    String[] allClientIds = {"!metastore_Schema_ID", "!coscine_Schema_ID", "!metastore_metadata_ID", "coscine_Metadata_ID"};
+    /////////////////////////////////////////////////////////////////////////////
+    // To disable a server put a '!' in front of the client ID
+    // e.g. 
+    // String[] allClientIds = {"!metastore_Schema_ID", "!coscine_Schema_ID", "!metastore_metadata_ID", "coscine_Metadata_ID"};
+    // to allow only coscine metadata server.
+    /////////////////////////////////////////////////////////////////////////////
+    String[] allClientIds = {"metastore_Schema_ID", "coscine_Schema_ID", "metastore_metadata_ID", "coscine_Metadata_ID"};
     String clientId = allClientIds[0];
     skip = false;
     if (clientId.startsWith("!")) {
@@ -507,6 +531,7 @@ public class Main {
       System.out.println(listOperations);
       id = "62b97a86-d3cf-4517-9b09-6a09cd9b476d";
       id = "21.11102/62b97a86-d3cf-4517-9b09-6a09cd9b476d#path=/newfile.txt";
+      id = "21.11102/62b97a86-d3cf-4517-9b09-6a09cd9b476d#path=/coscine.txt";
 //      id = "62b97a86-d3cf-4517-9b09-6a09cd9b476d?path=/coscine_upload.txt";
       eTag = "anyETag";
       element = null;
@@ -514,14 +539,12 @@ public class Main {
       // Request 0.DOIP/Op.Create
       if (listOperations.contains(DoipConstants.OP_CREATE)) {
         printHeader("Create...");
-        dobj = createMetadataDocument4Coscine();
+        dobj = createMetadataDocument4Coscine(id);
         dobj.id = id;
         result = client.create(dobj, authInfo, serviceInfo);
         printResult(result);
-        id = result.id;
-        // Fetch also ETag from header
-        eTag = result.attributes.getAsJsonObject("header").get("ETag").getAsString();
-        printHeader("eTag = " + eTag);
+//        id = result.id;
+        printHeader("ID = " + id);
       } else {
         printHeader("Skip Create...");
       }
@@ -554,7 +577,7 @@ public class Main {
         id = "21.11102/62b97a86-d3cf-4517-9b09-6a09cd9b476d#path=/TestTheREST.txt";
         // Request 0.DOIP/Op.Update
         printHeader("update digital object");
-        DigitalObject updateSchema = updateMetadataDocument(id, schemaId, eTag);
+        DigitalObject updateSchema = updateMetadataDocument4Coscine(id);
         updateSchema.id = id;
         result = client.update(updateSchema, authInfo, serviceInfo);
         printResult(result);
@@ -667,7 +690,7 @@ public class Main {
     return dobj;
   }
 
-  private static DigitalObject createMetadataDocument4Coscine() throws IOException {
+  private static DigitalObject createMetadataDocument4Coscine(String id) throws IOException {
     Datacite43Schema datacite = new Datacite43Schema();
     SimpleDateFormat sdf = new SimpleDateFormat("_yyyy_MM_dd_HH_mm");
     Title title = new Title();
@@ -686,7 +709,13 @@ public class Main {
     element.in = new ByteArrayInputStream(COSCINE_METADATA_V1.getBytes());
     element.length = (long) COSCINE_METADATA_V1.getBytes().length;
     dobj.elements.add(element);
-
+    
+    element = new Element();
+    element.id = "digitalObjectId";
+    element.type = "application/text";
+    element.in = new ByteArrayInputStream(id.getBytes());
+    element.length = (long) id.getBytes().length;
+    dobj.elements.add(element);
     return dobj;
   }
 
@@ -729,7 +758,7 @@ public class Main {
     return dobj;
   }
 
-  private static DigitalObject updateMetadataDocument4Coscine() throws IOException {
+  private static DigitalObject updateMetadataDocument4Coscine(String id) throws IOException {
     Datacite43Schema datacite = new Datacite43Schema();
     SimpleDateFormat sdf = new SimpleDateFormat("_yyyy_MM_dd_HH_mm");
     Title title = new Title();
@@ -739,14 +768,15 @@ public class Main {
 
     String json = new Gson().toJson(datacite);
     DigitalObject dobj = new DigitalObject();
+    dobj.id = id; 
     dobj.attributes = new JsonObject();
     dobj.attributes.addProperty("datacite", json);
     dobj.elements = new ArrayList<>();
     Element element = new Element();
     element.id = "document";
     element.type = "application/json";
-    element.in = new ByteArrayInputStream(COSCINE_METADATA_V1.getBytes());
-    element.length = (long) COSCINE_METADATA_V1.getBytes().length;
+    element.in = new ByteArrayInputStream(COSCINE_METADATA_V2.getBytes());
+    element.length = (long) COSCINE_METADATA_V2.getBytes().length;
     dobj.elements.add(element);
 
     return dobj;
