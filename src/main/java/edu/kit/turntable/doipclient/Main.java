@@ -134,17 +134,17 @@ public class Main {
 
   private static final String COSCINE_METADATA_V1 = "{\n"
           + "\"http://purl.org/dc/terms/creator\": [{\n"
-          + "\"value\": \"Volker Hartmann via turntable\",\n"
+          + "\"value\": \"Volker Hartmann via turntable dockerized version\",\n"
           + "\"type\": \"literal\",\n"
           + "      \"datatype\": \"http://www.w3.org/2001/XMLSchema#string\"\n"
           + "    }],\n"
           + "  \"http://purl.org/dc/terms/title\": [{\n"
-          + "      \"value\": \"Test with turntable!\",\n"
+          + "      \"value\": \"Test with dockerized turntable!\",\n"
           + "      \"type\": \"literal\",\n"
           + "      \"datatype\": \"http://www.w3.org/2001/XMLSchema#string\"\n"
           + "    }],\n"
           + "  \"http://purl.org/dc/terms/created\": [{\n"
-          + "      \"value\": \"2022-05-02\",\n"
+          + "      \"value\": \"2022-06-28\",\n"
           + "      \"type\": \"literal\",\n"
           + "      \"datatype\": \"http://www.w3.org/2001/XMLSchema#date\"\n"
           + "    }]\n"
@@ -152,17 +152,17 @@ public class Main {
 
   private static final String COSCINE_METADATA_V2 = "{\n"
           + "\"http://purl.org/dc/terms/creator\": [{\n"
-          + "\"value\": \"Volker Hartmann via turntable next version\",\n"
+          + "\"value\": \"Final test for updating creator with docker\",\n"
           + "\"type\": \"literal\",\n"
           + "      \"datatype\": \"http://www.w3.org/2001/XMLSchema#string\"\n"
           + "    }],\n"
           + "  \"http://purl.org/dc/terms/title\": [{\n"
-          + "      \"value\": \"Test update with turntable!\",\n"
+          + "      \"value\": \"Final test update with dockerized turntable!\",\n"
           + "      \"type\": \"literal\",\n"
           + "      \"datatype\": \"http://www.w3.org/2001/XMLSchema#string\"\n"
           + "    }],\n"
           + "  \"http://purl.org/dc/terms/created\": [{\n"
-          + "      \"value\": \"2022-05-10\",\n"
+          + "      \"value\": \"2022-06-28\",\n"
           + "      \"type\": \"literal\",\n"
           + "      \"datatype\": \"http://www.w3.org/2001/XMLSchema#date\"\n"
           + "    }]\n"
@@ -220,7 +220,7 @@ public class Main {
     DoipClient client = new DoipClient();
     DigitalObject dobj;
 
-    ServiceInfo serviceInfo = new ServiceInfo(TARGET_ONE, "localhost", PORT);
+    ServiceInfo serviceInfo = new ServiceInfo(TARGET_ONE, "141.52.215.78", PORT); //nfdi4ing.datamanager.kit.edu", PORT);
     // Configure JSON parser for config file
     Gson gson = new GsonBuilder()
             .setPrettyPrinting()
@@ -233,7 +233,7 @@ public class Main {
     // String[] allClientIds = {"!metastore_Schema_ID", "!coscine_Schema_ID", "!metastore_metadata_ID", "coscine_Metadata_ID"};
     // to allow only coscine metadata server.
     /////////////////////////////////////////////////////////////////////////////
-    String[] allClientIds = {"metastore_Schema_ID", "coscine_Schema_ID", "metastore_metadata_ID", "coscine_Metadata_ID"};
+    String[] allClientIds = {"!metastore_Schema_ID", "!coscine_Schema_ID", "!metastore_metadata_ID", "coscine_Metadata_ID"};
     String clientId = allClientIds[0];
     skip = false;
     if (clientId.startsWith("!")) {
@@ -529,11 +529,13 @@ public class Main {
       printHeader("LIST_OPERATIONS");
       listOperations = client.listOperations(TARGET_ONE, authInfo, serviceInfo);
       System.out.println(listOperations);
+        SimpleDateFormat sdf
+            = new SimpleDateFormat("-yyyy-MM-dd-HH-mm");
       id = "62b97a86-d3cf-4517-9b09-6a09cd9b476d";
       id = "21.11102/62b97a86-d3cf-4517-9b09-6a09cd9b476d#path=/newfile.txt";
       id = "21.11102/62b97a86-d3cf-4517-9b09-6a09cd9b476d#path=/coscine.txt";
+      id = "21.11102/62b97a86-d3cf-4517-9b09-6a09cd9b476d#path=/final_test_doip_mapping.txt" + sdf.format(new Date());
 //      id = "62b97a86-d3cf-4517-9b09-6a09cd9b476d?path=/coscine_upload.txt";
-      eTag = "anyETag";
       element = null;
       reader = null;
       // Request 0.DOIP/Op.Create
@@ -762,7 +764,7 @@ public class Main {
     Datacite43Schema datacite = new Datacite43Schema();
     SimpleDateFormat sdf = new SimpleDateFormat("_yyyy_MM_dd_HH_mm");
     Title title = new Title();
-    title.setTitle("document" + sdf.format(new Date()));
+    title.setTitle("Final test update document" + sdf.format(new Date()));
     datacite.getTitles().add(title);
     datacite.setPublisher("NFDI4Ing");
 
