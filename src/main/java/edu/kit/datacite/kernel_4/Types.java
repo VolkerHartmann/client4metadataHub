@@ -4,9 +4,20 @@ package edu.kit.datacite.kernel_4;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.processing.Generated;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonValue;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({
+    "resourceType",
+    "resourceTypeGeneral"
+})
 @Generated("jsonschema2pojo")
 public class Types {
 
@@ -15,23 +26,24 @@ public class Types {
      * (Required)
      * 
      */
-    @SerializedName("resourceType")
-    @Expose
+    @JsonProperty("resourceType")
     private String resourceType;
     /**
      * 
      * (Required)
      * 
      */
-    @SerializedName("resourceTypeGeneral")
-    @Expose
+    @JsonProperty("resourceTypeGeneral")
     private Types.ResourceTypeGeneral resourceTypeGeneral;
+    @JsonIgnore
+    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      * 
      * (Required)
      * 
      */
+    @JsonProperty("resourceType")
     public String getResourceType() {
         return resourceType;
     }
@@ -41,6 +53,7 @@ public class Types {
      * (Required)
      * 
      */
+    @JsonProperty("resourceType")
     public void setResourceType(String resourceType) {
         this.resourceType = resourceType;
     }
@@ -50,6 +63,7 @@ public class Types {
      * (Required)
      * 
      */
+    @JsonProperty("resourceTypeGeneral")
     public Types.ResourceTypeGeneral getResourceTypeGeneral() {
         return resourceTypeGeneral;
     }
@@ -59,8 +73,19 @@ public class Types {
      * (Required)
      * 
      */
+    @JsonProperty("resourceTypeGeneral")
     public void setResourceTypeGeneral(Types.ResourceTypeGeneral resourceTypeGeneral) {
         this.resourceTypeGeneral = resourceTypeGeneral;
+    }
+
+    @JsonAnyGetter
+    public Map<String, Object> getAdditionalProperties() {
+        return this.additionalProperties;
+    }
+
+    @JsonAnySetter
+    public void setAdditionalProperty(String name, Object value) {
+        this.additionalProperties.put(name, value);
     }
 
     @Override
@@ -75,6 +100,10 @@ public class Types {
         sb.append('=');
         sb.append(((this.resourceTypeGeneral == null)?"<null>":this.resourceTypeGeneral));
         sb.append(',');
+        sb.append("additionalProperties");
+        sb.append('=');
+        sb.append(((this.additionalProperties == null)?"<null>":this.additionalProperties));
+        sb.append(',');
         if (sb.charAt((sb.length()- 1)) == ',') {
             sb.setCharAt((sb.length()- 1), ']');
         } else {
@@ -87,6 +116,7 @@ public class Types {
     public int hashCode() {
         int result = 1;
         result = ((result* 31)+((this.resourceTypeGeneral == null)? 0 :this.resourceTypeGeneral.hashCode()));
+        result = ((result* 31)+((this.additionalProperties == null)? 0 :this.additionalProperties.hashCode()));
         result = ((result* 31)+((this.resourceType == null)? 0 :this.resourceType.hashCode()));
         return result;
     }
@@ -100,41 +130,26 @@ public class Types {
             return false;
         }
         Types rhs = ((Types) other);
-        return (((this.resourceTypeGeneral == rhs.resourceTypeGeneral)||((this.resourceTypeGeneral!= null)&&this.resourceTypeGeneral.equals(rhs.resourceTypeGeneral)))&&((this.resourceType == rhs.resourceType)||((this.resourceType!= null)&&this.resourceType.equals(rhs.resourceType))));
+        return ((((this.resourceTypeGeneral == rhs.resourceTypeGeneral)||((this.resourceTypeGeneral!= null)&&this.resourceTypeGeneral.equals(rhs.resourceTypeGeneral)))&&((this.additionalProperties == rhs.additionalProperties)||((this.additionalProperties!= null)&&this.additionalProperties.equals(rhs.additionalProperties))))&&((this.resourceType == rhs.resourceType)||((this.resourceType!= null)&&this.resourceType.equals(rhs.resourceType))));
     }
 
     @Generated("jsonschema2pojo")
     public enum ResourceTypeGeneral {
 
-        @SerializedName("Audiovisual")
         AUDIOVISUAL("Audiovisual"),
-        @SerializedName("Collection")
         COLLECTION("Collection"),
-        @SerializedName("DataPaper")
         DATA_PAPER("DataPaper"),
-        @SerializedName("Dataset")
         DATASET("Dataset"),
-        @SerializedName("Event")
         EVENT("Event"),
-        @SerializedName("Image")
         IMAGE("Image"),
-        @SerializedName("InteractiveResource")
         INTERACTIVE_RESOURCE("InteractiveResource"),
-        @SerializedName("Model")
         MODEL("Model"),
-        @SerializedName("PhysicalObject")
         PHYSICAL_OBJECT("PhysicalObject"),
-        @SerializedName("Service")
         SERVICE("Service"),
-        @SerializedName("Software")
         SOFTWARE("Software"),
-        @SerializedName("Sound")
         SOUND("Sound"),
-        @SerializedName("Text")
         TEXT("Text"),
-        @SerializedName("Workflow")
         WORKFLOW("Workflow"),
-        @SerializedName("Other")
         OTHER("Other");
         private final String value;
         private final static Map<String, Types.ResourceTypeGeneral> CONSTANTS = new HashMap<String, Types.ResourceTypeGeneral>();
@@ -154,10 +169,12 @@ public class Types {
             return this.value;
         }
 
+        @JsonValue
         public String value() {
             return this.value;
         }
 
+        @JsonCreator
         public static Types.ResourceTypeGeneral fromValue(String value) {
             Types.ResourceTypeGeneral constant = CONSTANTS.get(value);
             if (constant == null) {

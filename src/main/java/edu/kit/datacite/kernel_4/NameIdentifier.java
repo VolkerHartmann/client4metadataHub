@@ -2,10 +2,22 @@
 package edu.kit.datacite.kernel_4;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 import javax.annotation.processing.Generated;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({
+    "nameIdentifier",
+    "nameIdentifierScheme",
+    "schemeURI"
+})
 @Generated("jsonschema2pojo")
 public class NameIdentifier {
 
@@ -14,26 +26,26 @@ public class NameIdentifier {
      * (Required)
      * 
      */
-    @SerializedName("nameIdentifier")
-    @Expose
+    @JsonProperty("nameIdentifier")
     private String nameIdentifier;
     /**
      * 
      * (Required)
      * 
      */
-    @SerializedName("nameIdentifierScheme")
-    @Expose
+    @JsonProperty("nameIdentifierScheme")
     private String nameIdentifierScheme;
-    @SerializedName("schemeURI")
-    @Expose
+    @JsonProperty("schemeURI")
     private URI schemeURI;
+    @JsonIgnore
+    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      * 
      * (Required)
      * 
      */
+    @JsonProperty("nameIdentifier")
     public String getNameIdentifier() {
         return nameIdentifier;
     }
@@ -43,6 +55,7 @@ public class NameIdentifier {
      * (Required)
      * 
      */
+    @JsonProperty("nameIdentifier")
     public void setNameIdentifier(String nameIdentifier) {
         this.nameIdentifier = nameIdentifier;
     }
@@ -52,6 +65,7 @@ public class NameIdentifier {
      * (Required)
      * 
      */
+    @JsonProperty("nameIdentifierScheme")
     public String getNameIdentifierScheme() {
         return nameIdentifierScheme;
     }
@@ -61,16 +75,29 @@ public class NameIdentifier {
      * (Required)
      * 
      */
+    @JsonProperty("nameIdentifierScheme")
     public void setNameIdentifierScheme(String nameIdentifierScheme) {
         this.nameIdentifierScheme = nameIdentifierScheme;
     }
 
+    @JsonProperty("schemeURI")
     public URI getSchemeURI() {
         return schemeURI;
     }
 
+    @JsonProperty("schemeURI")
     public void setSchemeURI(URI schemeURI) {
         this.schemeURI = schemeURI;
+    }
+
+    @JsonAnyGetter
+    public Map<String, Object> getAdditionalProperties() {
+        return this.additionalProperties;
+    }
+
+    @JsonAnySetter
+    public void setAdditionalProperty(String name, Object value) {
+        this.additionalProperties.put(name, value);
     }
 
     @Override
@@ -89,6 +116,10 @@ public class NameIdentifier {
         sb.append('=');
         sb.append(((this.schemeURI == null)?"<null>":this.schemeURI));
         sb.append(',');
+        sb.append("additionalProperties");
+        sb.append('=');
+        sb.append(((this.additionalProperties == null)?"<null>":this.additionalProperties));
+        sb.append(',');
         if (sb.charAt((sb.length()- 1)) == ',') {
             sb.setCharAt((sb.length()- 1), ']');
         } else {
@@ -101,6 +132,7 @@ public class NameIdentifier {
     public int hashCode() {
         int result = 1;
         result = ((result* 31)+((this.nameIdentifierScheme == null)? 0 :this.nameIdentifierScheme.hashCode()));
+        result = ((result* 31)+((this.additionalProperties == null)? 0 :this.additionalProperties.hashCode()));
         result = ((result* 31)+((this.schemeURI == null)? 0 :this.schemeURI.hashCode()));
         result = ((result* 31)+((this.nameIdentifier == null)? 0 :this.nameIdentifier.hashCode()));
         return result;
@@ -115,7 +147,7 @@ public class NameIdentifier {
             return false;
         }
         NameIdentifier rhs = ((NameIdentifier) other);
-        return ((((this.nameIdentifierScheme == rhs.nameIdentifierScheme)||((this.nameIdentifierScheme!= null)&&this.nameIdentifierScheme.equals(rhs.nameIdentifierScheme)))&&((this.schemeURI == rhs.schemeURI)||((this.schemeURI!= null)&&this.schemeURI.equals(rhs.schemeURI))))&&((this.nameIdentifier == rhs.nameIdentifier)||((this.nameIdentifier!= null)&&this.nameIdentifier.equals(rhs.nameIdentifier))));
+        return (((((this.nameIdentifierScheme == rhs.nameIdentifierScheme)||((this.nameIdentifierScheme!= null)&&this.nameIdentifierScheme.equals(rhs.nameIdentifierScheme)))&&((this.additionalProperties == rhs.additionalProperties)||((this.additionalProperties!= null)&&this.additionalProperties.equals(rhs.additionalProperties))))&&((this.schemeURI == rhs.schemeURI)||((this.schemeURI!= null)&&this.schemeURI.equals(rhs.schemeURI))))&&((this.nameIdentifier == rhs.nameIdentifier)||((this.nameIdentifier!= null)&&this.nameIdentifier.equals(rhs.nameIdentifier))));
     }
 
 }

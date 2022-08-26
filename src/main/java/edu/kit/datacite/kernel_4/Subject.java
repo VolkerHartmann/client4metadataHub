@@ -2,10 +2,24 @@
 package edu.kit.datacite.kernel_4;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 import javax.annotation.processing.Generated;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({
+    "subject",
+    "subjectScheme",
+    "schemeURI",
+    "valueURI",
+    "lang"
+})
 @Generated("jsonschema2pojo")
 public class Subject {
 
@@ -14,27 +28,25 @@ public class Subject {
      * (Required)
      * 
      */
-    @SerializedName("subject")
-    @Expose
+    @JsonProperty("subject")
     private String subject;
-    @SerializedName("subjectScheme")
-    @Expose
+    @JsonProperty("subjectScheme")
     private String subjectScheme;
-    @SerializedName("schemeURI")
-    @Expose
+    @JsonProperty("schemeURI")
     private URI schemeURI;
-    @SerializedName("valueURI")
-    @Expose
+    @JsonProperty("valueURI")
     private URI valueURI;
-    @SerializedName("lang")
-    @Expose
+    @JsonProperty("lang")
     private String lang;
+    @JsonIgnore
+    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      * 
      * (Required)
      * 
      */
+    @JsonProperty("subject")
     public String getSubject() {
         return subject;
     }
@@ -44,40 +56,59 @@ public class Subject {
      * (Required)
      * 
      */
+    @JsonProperty("subject")
     public void setSubject(String subject) {
         this.subject = subject;
     }
 
+    @JsonProperty("subjectScheme")
     public String getSubjectScheme() {
         return subjectScheme;
     }
 
+    @JsonProperty("subjectScheme")
     public void setSubjectScheme(String subjectScheme) {
         this.subjectScheme = subjectScheme;
     }
 
+    @JsonProperty("schemeURI")
     public URI getSchemeURI() {
         return schemeURI;
     }
 
+    @JsonProperty("schemeURI")
     public void setSchemeURI(URI schemeURI) {
         this.schemeURI = schemeURI;
     }
 
+    @JsonProperty("valueURI")
     public URI getValueURI() {
         return valueURI;
     }
 
+    @JsonProperty("valueURI")
     public void setValueURI(URI valueURI) {
         this.valueURI = valueURI;
     }
 
+    @JsonProperty("lang")
     public String getLang() {
         return lang;
     }
 
+    @JsonProperty("lang")
     public void setLang(String lang) {
         this.lang = lang;
+    }
+
+    @JsonAnyGetter
+    public Map<String, Object> getAdditionalProperties() {
+        return this.additionalProperties;
+    }
+
+    @JsonAnySetter
+    public void setAdditionalProperty(String name, Object value) {
+        this.additionalProperties.put(name, value);
     }
 
     @Override
@@ -104,6 +135,10 @@ public class Subject {
         sb.append('=');
         sb.append(((this.lang == null)?"<null>":this.lang));
         sb.append(',');
+        sb.append("additionalProperties");
+        sb.append('=');
+        sb.append(((this.additionalProperties == null)?"<null>":this.additionalProperties));
+        sb.append(',');
         if (sb.charAt((sb.length()- 1)) == ',') {
             sb.setCharAt((sb.length()- 1), ']');
         } else {
@@ -115,10 +150,11 @@ public class Subject {
     @Override
     public int hashCode() {
         int result = 1;
-        result = ((result* 31)+((this.valueURI == null)? 0 :this.valueURI.hashCode()));
-        result = ((result* 31)+((this.lang == null)? 0 :this.lang.hashCode()));
         result = ((result* 31)+((this.schemeURI == null)? 0 :this.schemeURI.hashCode()));
         result = ((result* 31)+((this.subject == null)? 0 :this.subject.hashCode()));
+        result = ((result* 31)+((this.valueURI == null)? 0 :this.valueURI.hashCode()));
+        result = ((result* 31)+((this.additionalProperties == null)? 0 :this.additionalProperties.hashCode()));
+        result = ((result* 31)+((this.lang == null)? 0 :this.lang.hashCode()));
         result = ((result* 31)+((this.subjectScheme == null)? 0 :this.subjectScheme.hashCode()));
         return result;
     }
@@ -132,7 +168,7 @@ public class Subject {
             return false;
         }
         Subject rhs = ((Subject) other);
-        return ((((((this.valueURI == rhs.valueURI)||((this.valueURI!= null)&&this.valueURI.equals(rhs.valueURI)))&&((this.lang == rhs.lang)||((this.lang!= null)&&this.lang.equals(rhs.lang))))&&((this.schemeURI == rhs.schemeURI)||((this.schemeURI!= null)&&this.schemeURI.equals(rhs.schemeURI))))&&((this.subject == rhs.subject)||((this.subject!= null)&&this.subject.equals(rhs.subject))))&&((this.subjectScheme == rhs.subjectScheme)||((this.subjectScheme!= null)&&this.subjectScheme.equals(rhs.subjectScheme))));
+        return (((((((this.schemeURI == rhs.schemeURI)||((this.schemeURI!= null)&&this.schemeURI.equals(rhs.schemeURI)))&&((this.subject == rhs.subject)||((this.subject!= null)&&this.subject.equals(rhs.subject))))&&((this.valueURI == rhs.valueURI)||((this.valueURI!= null)&&this.valueURI.equals(rhs.valueURI))))&&((this.additionalProperties == rhs.additionalProperties)||((this.additionalProperties!= null)&&this.additionalProperties.equals(rhs.additionalProperties))))&&((this.lang == rhs.lang)||((this.lang!= null)&&this.lang.equals(rhs.lang))))&&((this.subjectScheme == rhs.subjectScheme)||((this.subjectScheme!= null)&&this.subjectScheme.equals(rhs.subjectScheme))));
     }
 
 }

@@ -6,9 +6,26 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.processing.Generated;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({
+    "name",
+    "nameType",
+    "givenName",
+    "familyName",
+    "nameIdentifiers",
+    "affiliations",
+    "lang"
+})
 @Generated("jsonschema2pojo")
 public class Creator {
 
@@ -17,33 +34,31 @@ public class Creator {
      * (Required)
      * 
      */
-    @SerializedName("name")
-    @Expose
+    @JsonProperty("name")
     private String name;
-    @SerializedName("nameType")
-    @Expose
+    @JsonProperty("nameType")
     private Creator.NameType nameType;
-    @SerializedName("givenName")
-    @Expose
+    @JsonProperty("givenName")
     private String givenName;
-    @SerializedName("familyName")
-    @Expose
+    @JsonProperty("familyName")
     private String familyName;
-    @SerializedName("nameIdentifiers")
-    @Expose
+    @JsonProperty("nameIdentifiers")
+    @JsonDeserialize(as = java.util.LinkedHashSet.class)
     private Set<NameIdentifier> nameIdentifiers = new LinkedHashSet<NameIdentifier>();
-    @SerializedName("affiliations")
-    @Expose
+    @JsonProperty("affiliations")
+    @JsonDeserialize(as = java.util.LinkedHashSet.class)
     private Set<Affiliation> affiliations = new LinkedHashSet<Affiliation>();
-    @SerializedName("lang")
-    @Expose
+    @JsonProperty("lang")
     private String lang;
+    @JsonIgnore
+    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      * 
      * (Required)
      * 
      */
+    @JsonProperty("name")
     public String getName() {
         return name;
     }
@@ -53,56 +68,79 @@ public class Creator {
      * (Required)
      * 
      */
+    @JsonProperty("name")
     public void setName(String name) {
         this.name = name;
     }
 
+    @JsonProperty("nameType")
     public Creator.NameType getNameType() {
         return nameType;
     }
 
+    @JsonProperty("nameType")
     public void setNameType(Creator.NameType nameType) {
         this.nameType = nameType;
     }
 
+    @JsonProperty("givenName")
     public String getGivenName() {
         return givenName;
     }
 
+    @JsonProperty("givenName")
     public void setGivenName(String givenName) {
         this.givenName = givenName;
     }
 
+    @JsonProperty("familyName")
     public String getFamilyName() {
         return familyName;
     }
 
+    @JsonProperty("familyName")
     public void setFamilyName(String familyName) {
         this.familyName = familyName;
     }
 
+    @JsonProperty("nameIdentifiers")
     public Set<NameIdentifier> getNameIdentifiers() {
         return nameIdentifiers;
     }
 
+    @JsonProperty("nameIdentifiers")
     public void setNameIdentifiers(Set<NameIdentifier> nameIdentifiers) {
         this.nameIdentifiers = nameIdentifiers;
     }
 
+    @JsonProperty("affiliations")
     public Set<Affiliation> getAffiliations() {
         return affiliations;
     }
 
+    @JsonProperty("affiliations")
     public void setAffiliations(Set<Affiliation> affiliations) {
         this.affiliations = affiliations;
     }
 
+    @JsonProperty("lang")
     public String getLang() {
         return lang;
     }
 
+    @JsonProperty("lang")
     public void setLang(String lang) {
         this.lang = lang;
+    }
+
+    @JsonAnyGetter
+    public Map<String, Object> getAdditionalProperties() {
+        return this.additionalProperties;
+    }
+
+    @JsonAnySetter
+    public void setAdditionalProperty(String name, Object value) {
+        this.additionalProperties.put(name, value);
     }
 
     @Override
@@ -137,6 +175,10 @@ public class Creator {
         sb.append('=');
         sb.append(((this.lang == null)?"<null>":this.lang));
         sb.append(',');
+        sb.append("additionalProperties");
+        sb.append('=');
+        sb.append(((this.additionalProperties == null)?"<null>":this.additionalProperties));
+        sb.append(',');
         if (sb.charAt((sb.length()- 1)) == ',') {
             sb.setCharAt((sb.length()- 1), ']');
         } else {
@@ -154,6 +196,7 @@ public class Creator {
         result = ((result* 31)+((this.name == null)? 0 :this.name.hashCode()));
         result = ((result* 31)+((this.nameIdentifiers == null)? 0 :this.nameIdentifiers.hashCode()));
         result = ((result* 31)+((this.affiliations == null)? 0 :this.affiliations.hashCode()));
+        result = ((result* 31)+((this.additionalProperties == null)? 0 :this.additionalProperties.hashCode()));
         result = ((result* 31)+((this.lang == null)? 0 :this.lang.hashCode()));
         return result;
     }
@@ -167,15 +210,13 @@ public class Creator {
             return false;
         }
         Creator rhs = ((Creator) other);
-        return ((((((((this.nameType == rhs.nameType)||((this.nameType!= null)&&this.nameType.equals(rhs.nameType)))&&((this.givenName == rhs.givenName)||((this.givenName!= null)&&this.givenName.equals(rhs.givenName))))&&((this.familyName == rhs.familyName)||((this.familyName!= null)&&this.familyName.equals(rhs.familyName))))&&((this.name == rhs.name)||((this.name!= null)&&this.name.equals(rhs.name))))&&((this.nameIdentifiers == rhs.nameIdentifiers)||((this.nameIdentifiers!= null)&&this.nameIdentifiers.equals(rhs.nameIdentifiers))))&&((this.affiliations == rhs.affiliations)||((this.affiliations!= null)&&this.affiliations.equals(rhs.affiliations))))&&((this.lang == rhs.lang)||((this.lang!= null)&&this.lang.equals(rhs.lang))));
+        return (((((((((this.nameType == rhs.nameType)||((this.nameType!= null)&&this.nameType.equals(rhs.nameType)))&&((this.givenName == rhs.givenName)||((this.givenName!= null)&&this.givenName.equals(rhs.givenName))))&&((this.familyName == rhs.familyName)||((this.familyName!= null)&&this.familyName.equals(rhs.familyName))))&&((this.name == rhs.name)||((this.name!= null)&&this.name.equals(rhs.name))))&&((this.nameIdentifiers == rhs.nameIdentifiers)||((this.nameIdentifiers!= null)&&this.nameIdentifiers.equals(rhs.nameIdentifiers))))&&((this.affiliations == rhs.affiliations)||((this.affiliations!= null)&&this.affiliations.equals(rhs.affiliations))))&&((this.additionalProperties == rhs.additionalProperties)||((this.additionalProperties!= null)&&this.additionalProperties.equals(rhs.additionalProperties))))&&((this.lang == rhs.lang)||((this.lang!= null)&&this.lang.equals(rhs.lang))));
     }
 
     @Generated("jsonschema2pojo")
     public enum NameType {
 
-        @SerializedName("Organizational")
         ORGANIZATIONAL("Organizational"),
-        @SerializedName("Personal")
         PERSONAL("Personal");
         private final String value;
         private final static Map<String, Creator.NameType> CONSTANTS = new HashMap<String, Creator.NameType>();
@@ -195,10 +236,12 @@ public class Creator {
             return this.value;
         }
 
+        @JsonValue
         public String value() {
             return this.value;
         }
 
+        @JsonCreator
         public static Creator.NameType fromValue(String value) {
             Creator.NameType constant = CONSTANTS.get(value);
             if (constant == null) {

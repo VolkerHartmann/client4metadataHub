@@ -1,10 +1,23 @@
 
 package edu.kit.datacite.kernel_4;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.annotation.processing.Generated;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({
+    "westBoundLongitude",
+    "eastBoundLongitude",
+    "southBoundLatitude",
+    "northBoundLatitude"
+})
 @Generated("jsonschema2pojo")
 public class GeoLocationBox {
 
@@ -13,39 +26,38 @@ public class GeoLocationBox {
      * (Required)
      * 
      */
-    @SerializedName("westBoundLongitude")
-    @Expose
+    @JsonProperty("westBoundLongitude")
     private Double westBoundLongitude;
     /**
      * 
      * (Required)
      * 
      */
-    @SerializedName("eastBoundLongitude")
-    @Expose
+    @JsonProperty("eastBoundLongitude")
     private Double eastBoundLongitude;
     /**
      * 
      * (Required)
      * 
      */
-    @SerializedName("southBoundLatitude")
-    @Expose
+    @JsonProperty("southBoundLatitude")
     private Double southBoundLatitude;
     /**
      * 
      * (Required)
      * 
      */
-    @SerializedName("northBoundLatitude")
-    @Expose
+    @JsonProperty("northBoundLatitude")
     private Double northBoundLatitude;
+    @JsonIgnore
+    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      * 
      * (Required)
      * 
      */
+    @JsonProperty("westBoundLongitude")
     public Double getWestBoundLongitude() {
         return westBoundLongitude;
     }
@@ -55,6 +67,7 @@ public class GeoLocationBox {
      * (Required)
      * 
      */
+    @JsonProperty("westBoundLongitude")
     public void setWestBoundLongitude(Double westBoundLongitude) {
         this.westBoundLongitude = westBoundLongitude;
     }
@@ -64,6 +77,7 @@ public class GeoLocationBox {
      * (Required)
      * 
      */
+    @JsonProperty("eastBoundLongitude")
     public Double getEastBoundLongitude() {
         return eastBoundLongitude;
     }
@@ -73,6 +87,7 @@ public class GeoLocationBox {
      * (Required)
      * 
      */
+    @JsonProperty("eastBoundLongitude")
     public void setEastBoundLongitude(Double eastBoundLongitude) {
         this.eastBoundLongitude = eastBoundLongitude;
     }
@@ -82,6 +97,7 @@ public class GeoLocationBox {
      * (Required)
      * 
      */
+    @JsonProperty("southBoundLatitude")
     public Double getSouthBoundLatitude() {
         return southBoundLatitude;
     }
@@ -91,6 +107,7 @@ public class GeoLocationBox {
      * (Required)
      * 
      */
+    @JsonProperty("southBoundLatitude")
     public void setSouthBoundLatitude(Double southBoundLatitude) {
         this.southBoundLatitude = southBoundLatitude;
     }
@@ -100,6 +117,7 @@ public class GeoLocationBox {
      * (Required)
      * 
      */
+    @JsonProperty("northBoundLatitude")
     public Double getNorthBoundLatitude() {
         return northBoundLatitude;
     }
@@ -109,8 +127,19 @@ public class GeoLocationBox {
      * (Required)
      * 
      */
+    @JsonProperty("northBoundLatitude")
     public void setNorthBoundLatitude(Double northBoundLatitude) {
         this.northBoundLatitude = northBoundLatitude;
+    }
+
+    @JsonAnyGetter
+    public Map<String, Object> getAdditionalProperties() {
+        return this.additionalProperties;
+    }
+
+    @JsonAnySetter
+    public void setAdditionalProperty(String name, Object value) {
+        this.additionalProperties.put(name, value);
     }
 
     @Override
@@ -133,6 +162,10 @@ public class GeoLocationBox {
         sb.append('=');
         sb.append(((this.northBoundLatitude == null)?"<null>":this.northBoundLatitude));
         sb.append(',');
+        sb.append("additionalProperties");
+        sb.append('=');
+        sb.append(((this.additionalProperties == null)?"<null>":this.additionalProperties));
+        sb.append(',');
         if (sb.charAt((sb.length()- 1)) == ',') {
             sb.setCharAt((sb.length()- 1), ']');
         } else {
@@ -146,6 +179,7 @@ public class GeoLocationBox {
         int result = 1;
         result = ((result* 31)+((this.northBoundLatitude == null)? 0 :this.northBoundLatitude.hashCode()));
         result = ((result* 31)+((this.southBoundLatitude == null)? 0 :this.southBoundLatitude.hashCode()));
+        result = ((result* 31)+((this.additionalProperties == null)? 0 :this.additionalProperties.hashCode()));
         result = ((result* 31)+((this.westBoundLongitude == null)? 0 :this.westBoundLongitude.hashCode()));
         result = ((result* 31)+((this.eastBoundLongitude == null)? 0 :this.eastBoundLongitude.hashCode()));
         return result;
@@ -160,7 +194,7 @@ public class GeoLocationBox {
             return false;
         }
         GeoLocationBox rhs = ((GeoLocationBox) other);
-        return (((((this.northBoundLatitude == rhs.northBoundLatitude)||((this.northBoundLatitude!= null)&&this.northBoundLatitude.equals(rhs.northBoundLatitude)))&&((this.southBoundLatitude == rhs.southBoundLatitude)||((this.southBoundLatitude!= null)&&this.southBoundLatitude.equals(rhs.southBoundLatitude))))&&((this.westBoundLongitude == rhs.westBoundLongitude)||((this.westBoundLongitude!= null)&&this.westBoundLongitude.equals(rhs.westBoundLongitude))))&&((this.eastBoundLongitude == rhs.eastBoundLongitude)||((this.eastBoundLongitude!= null)&&this.eastBoundLongitude.equals(rhs.eastBoundLongitude))));
+        return ((((((this.northBoundLatitude == rhs.northBoundLatitude)||((this.northBoundLatitude!= null)&&this.northBoundLatitude.equals(rhs.northBoundLatitude)))&&((this.southBoundLatitude == rhs.southBoundLatitude)||((this.southBoundLatitude!= null)&&this.southBoundLatitude.equals(rhs.southBoundLatitude))))&&((this.additionalProperties == rhs.additionalProperties)||((this.additionalProperties!= null)&&this.additionalProperties.equals(rhs.additionalProperties))))&&((this.westBoundLongitude == rhs.westBoundLongitude)||((this.westBoundLongitude!= null)&&this.westBoundLongitude.equals(rhs.westBoundLongitude))))&&((this.eastBoundLongitude == rhs.eastBoundLongitude)||((this.eastBoundLongitude!= null)&&this.eastBoundLongitude.equals(rhs.eastBoundLongitude))));
     }
 
 }

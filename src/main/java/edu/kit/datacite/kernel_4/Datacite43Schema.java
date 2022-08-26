@@ -1,12 +1,42 @@
 
 package edu.kit.datacite.kernel_4;
 
+import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 import javax.annotation.processing.Generated;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({
+    "types",
+    "identifiers",
+    "creators",
+    "titles",
+    "publisher",
+    "publicationYear",
+    "subjects",
+    "contributors",
+    "dates",
+    "language",
+    "alternateIdentifiers",
+    "relatedIdentifiers",
+    "sizes",
+    "formats",
+    "version",
+    "rightsList",
+    "descriptions",
+    "geoLocations",
+    "fundingReferences",
+    "schemaVersion"
+})
 @Generated("jsonschema2pojo")
 public class Datacite43Schema {
 
@@ -15,106 +45,103 @@ public class Datacite43Schema {
      * (Required)
      * 
      */
-    @SerializedName("types")
-    @Expose
+    @JsonProperty("types")
     private Types types;
     /**
      * 
      * (Required)
      * 
      */
-    @SerializedName("identifiers")
-    @Expose
+    @JsonProperty("identifiers")
+    @JsonDeserialize(as = java.util.LinkedHashSet.class)
     private Set<Identifier> identifiers = new LinkedHashSet<Identifier>();
     /**
      * 
      * (Required)
      * 
      */
-    @SerializedName("creators")
-    @Expose
+    @JsonProperty("creators")
+    @JsonDeserialize(as = java.util.LinkedHashSet.class)
     private Set<Creator> creators = new LinkedHashSet<Creator>();
     /**
      * 
      * (Required)
      * 
      */
-    @SerializedName("titles")
-    @Expose
+    @JsonProperty("titles")
+    @JsonDeserialize(as = java.util.LinkedHashSet.class)
     private Set<Title> titles = new LinkedHashSet<Title>();
     /**
      * 
      * (Required)
      * 
      */
-    @SerializedName("publisher")
-    @Expose
+    @JsonProperty("publisher")
     private String publisher;
     /**
      * 
      * (Required)
      * 
      */
-    @SerializedName("publicationYear")
-    @Expose
+    @JsonProperty("publicationYear")
     private String publicationYear;
-    @SerializedName("subjects")
-    @Expose
+    @JsonProperty("subjects")
+    @JsonDeserialize(as = java.util.LinkedHashSet.class)
     private Set<Subject> subjects = new LinkedHashSet<Subject>();
-    @SerializedName("contributors")
-    @Expose
+    @JsonProperty("contributors")
+    @JsonDeserialize(as = java.util.LinkedHashSet.class)
     private Set<Contributor> contributors = new LinkedHashSet<Contributor>();
-    @SerializedName("dates")
-    @Expose
+    @JsonProperty("dates")
+    @JsonDeserialize(as = java.util.LinkedHashSet.class)
     private Set<Date> dates = new LinkedHashSet<Date>();
     /**
      * Primary language of the resource. Allowed values are taken from  IETF BCP 47, ISO 639-1 language codes.
      * 
      */
-    @SerializedName("language")
-    @Expose
+    @JsonProperty("language")
     private String language;
-    @SerializedName("alternateIdentifiers")
-    @Expose
+    @JsonProperty("alternateIdentifiers")
+    @JsonDeserialize(as = java.util.LinkedHashSet.class)
     private Set<AlternateIdentifier> alternateIdentifiers = new LinkedHashSet<AlternateIdentifier>();
-    @SerializedName("relatedIdentifiers")
-    @Expose
+    @JsonProperty("relatedIdentifiers")
+    @JsonDeserialize(as = java.util.LinkedHashSet.class)
     private Set<RelatedIdentifier> relatedIdentifiers = new LinkedHashSet<RelatedIdentifier>();
-    @SerializedName("sizes")
-    @Expose
+    @JsonProperty("sizes")
+    @JsonDeserialize(as = java.util.LinkedHashSet.class)
     private Set<String> sizes = new LinkedHashSet<String>();
-    @SerializedName("formats")
-    @Expose
+    @JsonProperty("formats")
+    @JsonDeserialize(as = java.util.LinkedHashSet.class)
     private Set<String> formats = new LinkedHashSet<String>();
-    @SerializedName("version")
-    @Expose
+    @JsonProperty("version")
     private String version;
-    @SerializedName("rightsList")
-    @Expose
+    @JsonProperty("rightsList")
+    @JsonDeserialize(as = java.util.LinkedHashSet.class)
     private Set<Rights> rightsList = new LinkedHashSet<Rights>();
-    @SerializedName("descriptions")
-    @Expose
+    @JsonProperty("descriptions")
+    @JsonDeserialize(as = java.util.LinkedHashSet.class)
     private Set<Description> descriptions = new LinkedHashSet<Description>();
-    @SerializedName("geoLocations")
-    @Expose
+    @JsonProperty("geoLocations")
+    @JsonDeserialize(as = java.util.LinkedHashSet.class)
     private Set<GeoLocation> geoLocations = new LinkedHashSet<GeoLocation>();
-    @SerializedName("fundingReferences")
-    @Expose
+    @JsonProperty("fundingReferences")
+    @JsonDeserialize(as = java.util.LinkedHashSet.class)
     private Set<FundingReference> fundingReferences = new LinkedHashSet<FundingReference>();
     /**
      * 
      * (Required)
      * 
      */
-    @SerializedName("schemaVersion")
-    @Expose
+    @JsonProperty("schemaVersion")
     private String schemaVersion;
+    @JsonIgnore
+    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      * 
      * (Required)
      * 
      */
+    @JsonProperty("types")
     public Types getTypes() {
         return types;
     }
@@ -124,6 +151,7 @@ public class Datacite43Schema {
      * (Required)
      * 
      */
+    @JsonProperty("types")
     public void setTypes(Types types) {
         this.types = types;
     }
@@ -133,6 +161,7 @@ public class Datacite43Schema {
      * (Required)
      * 
      */
+    @JsonProperty("identifiers")
     public Set<Identifier> getIdentifiers() {
         return identifiers;
     }
@@ -142,6 +171,7 @@ public class Datacite43Schema {
      * (Required)
      * 
      */
+    @JsonProperty("identifiers")
     public void setIdentifiers(Set<Identifier> identifiers) {
         this.identifiers = identifiers;
     }
@@ -151,6 +181,7 @@ public class Datacite43Schema {
      * (Required)
      * 
      */
+    @JsonProperty("creators")
     public Set<Creator> getCreators() {
         return creators;
     }
@@ -160,6 +191,7 @@ public class Datacite43Schema {
      * (Required)
      * 
      */
+    @JsonProperty("creators")
     public void setCreators(Set<Creator> creators) {
         this.creators = creators;
     }
@@ -169,6 +201,7 @@ public class Datacite43Schema {
      * (Required)
      * 
      */
+    @JsonProperty("titles")
     public Set<Title> getTitles() {
         return titles;
     }
@@ -178,6 +211,7 @@ public class Datacite43Schema {
      * (Required)
      * 
      */
+    @JsonProperty("titles")
     public void setTitles(Set<Title> titles) {
         this.titles = titles;
     }
@@ -187,6 +221,7 @@ public class Datacite43Schema {
      * (Required)
      * 
      */
+    @JsonProperty("publisher")
     public String getPublisher() {
         return publisher;
     }
@@ -196,6 +231,7 @@ public class Datacite43Schema {
      * (Required)
      * 
      */
+    @JsonProperty("publisher")
     public void setPublisher(String publisher) {
         this.publisher = publisher;
     }
@@ -205,6 +241,7 @@ public class Datacite43Schema {
      * (Required)
      * 
      */
+    @JsonProperty("publicationYear")
     public String getPublicationYear() {
         return publicationYear;
     }
@@ -214,30 +251,37 @@ public class Datacite43Schema {
      * (Required)
      * 
      */
+    @JsonProperty("publicationYear")
     public void setPublicationYear(String publicationYear) {
         this.publicationYear = publicationYear;
     }
 
+    @JsonProperty("subjects")
     public Set<Subject> getSubjects() {
         return subjects;
     }
 
+    @JsonProperty("subjects")
     public void setSubjects(Set<Subject> subjects) {
         this.subjects = subjects;
     }
 
+    @JsonProperty("contributors")
     public Set<Contributor> getContributors() {
         return contributors;
     }
 
+    @JsonProperty("contributors")
     public void setContributors(Set<Contributor> contributors) {
         this.contributors = contributors;
     }
 
+    @JsonProperty("dates")
     public Set<Date> getDates() {
         return dates;
     }
 
+    @JsonProperty("dates")
     public void setDates(Set<Date> dates) {
         this.dates = dates;
     }
@@ -246,6 +290,7 @@ public class Datacite43Schema {
      * Primary language of the resource. Allowed values are taken from  IETF BCP 47, ISO 639-1 language codes.
      * 
      */
+    @JsonProperty("language")
     public String getLanguage() {
         return language;
     }
@@ -254,78 +299,97 @@ public class Datacite43Schema {
      * Primary language of the resource. Allowed values are taken from  IETF BCP 47, ISO 639-1 language codes.
      * 
      */
+    @JsonProperty("language")
     public void setLanguage(String language) {
         this.language = language;
     }
 
+    @JsonProperty("alternateIdentifiers")
     public Set<AlternateIdentifier> getAlternateIdentifiers() {
         return alternateIdentifiers;
     }
 
+    @JsonProperty("alternateIdentifiers")
     public void setAlternateIdentifiers(Set<AlternateIdentifier> alternateIdentifiers) {
         this.alternateIdentifiers = alternateIdentifiers;
     }
 
+    @JsonProperty("relatedIdentifiers")
     public Set<RelatedIdentifier> getRelatedIdentifiers() {
         return relatedIdentifiers;
     }
 
+    @JsonProperty("relatedIdentifiers")
     public void setRelatedIdentifiers(Set<RelatedIdentifier> relatedIdentifiers) {
         this.relatedIdentifiers = relatedIdentifiers;
     }
 
+    @JsonProperty("sizes")
     public Set<String> getSizes() {
         return sizes;
     }
 
+    @JsonProperty("sizes")
     public void setSizes(Set<String> sizes) {
         this.sizes = sizes;
     }
 
+    @JsonProperty("formats")
     public Set<String> getFormats() {
         return formats;
     }
 
+    @JsonProperty("formats")
     public void setFormats(Set<String> formats) {
         this.formats = formats;
     }
 
+    @JsonProperty("version")
     public String getVersion() {
         return version;
     }
 
+    @JsonProperty("version")
     public void setVersion(String version) {
         this.version = version;
     }
 
+    @JsonProperty("rightsList")
     public Set<Rights> getRightsList() {
         return rightsList;
     }
 
+    @JsonProperty("rightsList")
     public void setRightsList(Set<Rights> rightsList) {
         this.rightsList = rightsList;
     }
 
+    @JsonProperty("descriptions")
     public Set<Description> getDescriptions() {
         return descriptions;
     }
 
+    @JsonProperty("descriptions")
     public void setDescriptions(Set<Description> descriptions) {
         this.descriptions = descriptions;
     }
 
+    @JsonProperty("geoLocations")
     public Set<GeoLocation> getGeoLocations() {
         return geoLocations;
     }
 
+    @JsonProperty("geoLocations")
     public void setGeoLocations(Set<GeoLocation> geoLocations) {
         this.geoLocations = geoLocations;
     }
 
+    @JsonProperty("fundingReferences")
     public Set<FundingReference> getFundingReferences() {
         return fundingReferences;
     }
 
+    @JsonProperty("fundingReferences")
     public void setFundingReferences(Set<FundingReference> fundingReferences) {
         this.fundingReferences = fundingReferences;
     }
@@ -335,6 +399,7 @@ public class Datacite43Schema {
      * (Required)
      * 
      */
+    @JsonProperty("schemaVersion")
     public String getSchemaVersion() {
         return schemaVersion;
     }
@@ -344,8 +409,19 @@ public class Datacite43Schema {
      * (Required)
      * 
      */
+    @JsonProperty("schemaVersion")
     public void setSchemaVersion(String schemaVersion) {
         this.schemaVersion = schemaVersion;
+    }
+
+    @JsonAnyGetter
+    public Map<String, Object> getAdditionalProperties() {
+        return this.additionalProperties;
+    }
+
+    @JsonAnySetter
+    public void setAdditionalProperty(String name, Object value) {
+        this.additionalProperties.put(name, value);
     }
 
     @Override
@@ -432,6 +508,10 @@ public class Datacite43Schema {
         sb.append('=');
         sb.append(((this.schemaVersion == null)?"<null>":this.schemaVersion));
         sb.append(',');
+        sb.append("additionalProperties");
+        sb.append('=');
+        sb.append(((this.additionalProperties == null)?"<null>":this.additionalProperties));
+        sb.append(',');
         if (sb.charAt((sb.length()- 1)) == ',') {
             sb.setCharAt((sb.length()- 1), ']');
         } else {
@@ -462,6 +542,7 @@ public class Datacite43Schema {
         result = ((result* 31)+((this.publisher == null)? 0 :this.publisher.hashCode()));
         result = ((result* 31)+((this.publicationYear == null)? 0 :this.publicationYear.hashCode()));
         result = ((result* 31)+((this.contributors == null)? 0 :this.contributors.hashCode()));
+        result = ((result* 31)+((this.additionalProperties == null)? 0 :this.additionalProperties.hashCode()));
         result = ((result* 31)+((this.fundingReferences == null)? 0 :this.fundingReferences.hashCode()));
         return result;
     }
@@ -475,7 +556,7 @@ public class Datacite43Schema {
             return false;
         }
         Datacite43Schema rhs = ((Datacite43Schema) other);
-        return (((((((((((((((((((((this.types == rhs.types)||((this.types!= null)&&this.types.equals(rhs.types)))&&((this.formats == rhs.formats)||((this.formats!= null)&&this.formats.equals(rhs.formats))))&&((this.schemaVersion == rhs.schemaVersion)||((this.schemaVersion!= null)&&this.schemaVersion.equals(rhs.schemaVersion))))&&((this.rightsList == rhs.rightsList)||((this.rightsList!= null)&&this.rightsList.equals(rhs.rightsList))))&&((this.identifiers == rhs.identifiers)||((this.identifiers!= null)&&this.identifiers.equals(rhs.identifiers))))&&((this.creators == rhs.creators)||((this.creators!= null)&&this.creators.equals(rhs.creators))))&&((this.subjects == rhs.subjects)||((this.subjects!= null)&&this.subjects.equals(rhs.subjects))))&&((this.dates == rhs.dates)||((this.dates!= null)&&this.dates.equals(rhs.dates))))&&((this.language == rhs.language)||((this.language!= null)&&this.language.equals(rhs.language))))&&((this.titles == rhs.titles)||((this.titles!= null)&&this.titles.equals(rhs.titles))))&&((this.relatedIdentifiers == rhs.relatedIdentifiers)||((this.relatedIdentifiers!= null)&&this.relatedIdentifiers.equals(rhs.relatedIdentifiers))))&&((this.version == rhs.version)||((this.version!= null)&&this.version.equals(rhs.version))))&&((this.descriptions == rhs.descriptions)||((this.descriptions!= null)&&this.descriptions.equals(rhs.descriptions))))&&((this.geoLocations == rhs.geoLocations)||((this.geoLocations!= null)&&this.geoLocations.equals(rhs.geoLocations))))&&((this.alternateIdentifiers == rhs.alternateIdentifiers)||((this.alternateIdentifiers!= null)&&this.alternateIdentifiers.equals(rhs.alternateIdentifiers))))&&((this.sizes == rhs.sizes)||((this.sizes!= null)&&this.sizes.equals(rhs.sizes))))&&((this.publisher == rhs.publisher)||((this.publisher!= null)&&this.publisher.equals(rhs.publisher))))&&((this.publicationYear == rhs.publicationYear)||((this.publicationYear!= null)&&this.publicationYear.equals(rhs.publicationYear))))&&((this.contributors == rhs.contributors)||((this.contributors!= null)&&this.contributors.equals(rhs.contributors))))&&((this.fundingReferences == rhs.fundingReferences)||((this.fundingReferences!= null)&&this.fundingReferences.equals(rhs.fundingReferences))));
+        return ((((((((((((((((((((((this.types == rhs.types)||((this.types!= null)&&this.types.equals(rhs.types)))&&((this.formats == rhs.formats)||((this.formats!= null)&&this.formats.equals(rhs.formats))))&&((this.schemaVersion == rhs.schemaVersion)||((this.schemaVersion!= null)&&this.schemaVersion.equals(rhs.schemaVersion))))&&((this.rightsList == rhs.rightsList)||((this.rightsList!= null)&&this.rightsList.equals(rhs.rightsList))))&&((this.identifiers == rhs.identifiers)||((this.identifiers!= null)&&this.identifiers.equals(rhs.identifiers))))&&((this.creators == rhs.creators)||((this.creators!= null)&&this.creators.equals(rhs.creators))))&&((this.subjects == rhs.subjects)||((this.subjects!= null)&&this.subjects.equals(rhs.subjects))))&&((this.dates == rhs.dates)||((this.dates!= null)&&this.dates.equals(rhs.dates))))&&((this.language == rhs.language)||((this.language!= null)&&this.language.equals(rhs.language))))&&((this.titles == rhs.titles)||((this.titles!= null)&&this.titles.equals(rhs.titles))))&&((this.relatedIdentifiers == rhs.relatedIdentifiers)||((this.relatedIdentifiers!= null)&&this.relatedIdentifiers.equals(rhs.relatedIdentifiers))))&&((this.version == rhs.version)||((this.version!= null)&&this.version.equals(rhs.version))))&&((this.descriptions == rhs.descriptions)||((this.descriptions!= null)&&this.descriptions.equals(rhs.descriptions))))&&((this.geoLocations == rhs.geoLocations)||((this.geoLocations!= null)&&this.geoLocations.equals(rhs.geoLocations))))&&((this.alternateIdentifiers == rhs.alternateIdentifiers)||((this.alternateIdentifiers!= null)&&this.alternateIdentifiers.equals(rhs.alternateIdentifiers))))&&((this.sizes == rhs.sizes)||((this.sizes!= null)&&this.sizes.equals(rhs.sizes))))&&((this.publisher == rhs.publisher)||((this.publisher!= null)&&this.publisher.equals(rhs.publisher))))&&((this.publicationYear == rhs.publicationYear)||((this.publicationYear!= null)&&this.publicationYear.equals(rhs.publicationYear))))&&((this.contributors == rhs.contributors)||((this.contributors!= null)&&this.contributors.equals(rhs.contributors))))&&((this.additionalProperties == rhs.additionalProperties)||((this.additionalProperties!= null)&&this.additionalProperties.equals(rhs.additionalProperties))))&&((this.fundingReferences == rhs.fundingReferences)||((this.fundingReferences!= null)&&this.fundingReferences.equals(rhs.fundingReferences))));
     }
 
 }

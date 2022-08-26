@@ -4,9 +4,21 @@ package edu.kit.datacite.kernel_4;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.processing.Generated;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonValue;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({
+    "description",
+    "descriptionType",
+    "lang"
+})
 @Generated("jsonschema2pojo")
 public class Description {
 
@@ -15,26 +27,26 @@ public class Description {
      * (Required)
      * 
      */
-    @SerializedName("description")
-    @Expose
+    @JsonProperty("description")
     private String description;
     /**
      * 
      * (Required)
      * 
      */
-    @SerializedName("descriptionType")
-    @Expose
+    @JsonProperty("descriptionType")
     private Description.DescriptionType descriptionType;
-    @SerializedName("lang")
-    @Expose
+    @JsonProperty("lang")
     private String lang;
+    @JsonIgnore
+    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      * 
      * (Required)
      * 
      */
+    @JsonProperty("description")
     public String getDescription() {
         return description;
     }
@@ -44,6 +56,7 @@ public class Description {
      * (Required)
      * 
      */
+    @JsonProperty("description")
     public void setDescription(String description) {
         this.description = description;
     }
@@ -53,6 +66,7 @@ public class Description {
      * (Required)
      * 
      */
+    @JsonProperty("descriptionType")
     public Description.DescriptionType getDescriptionType() {
         return descriptionType;
     }
@@ -62,16 +76,29 @@ public class Description {
      * (Required)
      * 
      */
+    @JsonProperty("descriptionType")
     public void setDescriptionType(Description.DescriptionType descriptionType) {
         this.descriptionType = descriptionType;
     }
 
+    @JsonProperty("lang")
     public String getLang() {
         return lang;
     }
 
+    @JsonProperty("lang")
     public void setLang(String lang) {
         this.lang = lang;
+    }
+
+    @JsonAnyGetter
+    public Map<String, Object> getAdditionalProperties() {
+        return this.additionalProperties;
+    }
+
+    @JsonAnySetter
+    public void setAdditionalProperty(String name, Object value) {
+        this.additionalProperties.put(name, value);
     }
 
     @Override
@@ -90,6 +117,10 @@ public class Description {
         sb.append('=');
         sb.append(((this.lang == null)?"<null>":this.lang));
         sb.append(',');
+        sb.append("additionalProperties");
+        sb.append('=');
+        sb.append(((this.additionalProperties == null)?"<null>":this.additionalProperties));
+        sb.append(',');
         if (sb.charAt((sb.length()- 1)) == ',') {
             sb.setCharAt((sb.length()- 1), ']');
         } else {
@@ -102,6 +133,7 @@ public class Description {
     public int hashCode() {
         int result = 1;
         result = ((result* 31)+((this.description == null)? 0 :this.description.hashCode()));
+        result = ((result* 31)+((this.additionalProperties == null)? 0 :this.additionalProperties.hashCode()));
         result = ((result* 31)+((this.lang == null)? 0 :this.lang.hashCode()));
         result = ((result* 31)+((this.descriptionType == null)? 0 :this.descriptionType.hashCode()));
         return result;
@@ -116,23 +148,17 @@ public class Description {
             return false;
         }
         Description rhs = ((Description) other);
-        return ((((this.description == rhs.description)||((this.description!= null)&&this.description.equals(rhs.description)))&&((this.lang == rhs.lang)||((this.lang!= null)&&this.lang.equals(rhs.lang))))&&((this.descriptionType == rhs.descriptionType)||((this.descriptionType!= null)&&this.descriptionType.equals(rhs.descriptionType))));
+        return (((((this.description == rhs.description)||((this.description!= null)&&this.description.equals(rhs.description)))&&((this.additionalProperties == rhs.additionalProperties)||((this.additionalProperties!= null)&&this.additionalProperties.equals(rhs.additionalProperties))))&&((this.lang == rhs.lang)||((this.lang!= null)&&this.lang.equals(rhs.lang))))&&((this.descriptionType == rhs.descriptionType)||((this.descriptionType!= null)&&this.descriptionType.equals(rhs.descriptionType))));
     }
 
     @Generated("jsonschema2pojo")
     public enum DescriptionType {
 
-        @SerializedName("Abstract")
         ABSTRACT("Abstract"),
-        @SerializedName("Methods")
         METHODS("Methods"),
-        @SerializedName("SeriesInformation")
         SERIES_INFORMATION("SeriesInformation"),
-        @SerializedName("TableOfContents")
         TABLE_OF_CONTENTS("TableOfContents"),
-        @SerializedName("TechnicalInfo")
         TECHNICAL_INFO("TechnicalInfo"),
-        @SerializedName("Other")
         OTHER("Other");
         private final String value;
         private final static Map<String, Description.DescriptionType> CONSTANTS = new HashMap<String, Description.DescriptionType>();
@@ -152,10 +178,12 @@ public class Description {
             return this.value;
         }
 
+        @JsonValue
         public String value() {
             return this.value;
         }
 
+        @JsonCreator
         public static Description.DescriptionType fromValue(String value) {
             Description.DescriptionType constant = CONSTANTS.get(value);
             if (constant == null) {

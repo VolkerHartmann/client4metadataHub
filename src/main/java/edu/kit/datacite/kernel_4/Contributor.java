@@ -6,9 +6,27 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.processing.Generated;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({
+    "contributorType",
+    "name",
+    "nameType",
+    "givenName",
+    "familyName",
+    "nameIdentifiers",
+    "affiliations",
+    "lang"
+})
 @Generated("jsonschema2pojo")
 public class Contributor {
 
@@ -17,41 +35,38 @@ public class Contributor {
      * (Required)
      * 
      */
-    @SerializedName("contributorType")
-    @Expose
+    @JsonProperty("contributorType")
     private Contributor.ContributorType contributorType;
     /**
      * 
      * (Required)
      * 
      */
-    @SerializedName("name")
-    @Expose
+    @JsonProperty("name")
     private String name;
-    @SerializedName("nameType")
-    @Expose
+    @JsonProperty("nameType")
     private edu.kit.datacite.kernel_4.Creator.NameType nameType;
-    @SerializedName("givenName")
-    @Expose
+    @JsonProperty("givenName")
     private String givenName;
-    @SerializedName("familyName")
-    @Expose
+    @JsonProperty("familyName")
     private String familyName;
-    @SerializedName("nameIdentifiers")
-    @Expose
+    @JsonProperty("nameIdentifiers")
+    @JsonDeserialize(as = java.util.LinkedHashSet.class)
     private Set<NameIdentifier> nameIdentifiers = new LinkedHashSet<NameIdentifier>();
-    @SerializedName("affiliations")
-    @Expose
+    @JsonProperty("affiliations")
+    @JsonDeserialize(as = java.util.LinkedHashSet.class)
     private Set<Affiliation> affiliations = new LinkedHashSet<Affiliation>();
-    @SerializedName("lang")
-    @Expose
+    @JsonProperty("lang")
     private String lang;
+    @JsonIgnore
+    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      * 
      * (Required)
      * 
      */
+    @JsonProperty("contributorType")
     public Contributor.ContributorType getContributorType() {
         return contributorType;
     }
@@ -61,6 +76,7 @@ public class Contributor {
      * (Required)
      * 
      */
+    @JsonProperty("contributorType")
     public void setContributorType(Contributor.ContributorType contributorType) {
         this.contributorType = contributorType;
     }
@@ -70,6 +86,7 @@ public class Contributor {
      * (Required)
      * 
      */
+    @JsonProperty("name")
     public String getName() {
         return name;
     }
@@ -79,56 +96,79 @@ public class Contributor {
      * (Required)
      * 
      */
+    @JsonProperty("name")
     public void setName(String name) {
         this.name = name;
     }
 
+    @JsonProperty("nameType")
     public edu.kit.datacite.kernel_4.Creator.NameType getNameType() {
         return nameType;
     }
 
+    @JsonProperty("nameType")
     public void setNameType(edu.kit.datacite.kernel_4.Creator.NameType nameType) {
         this.nameType = nameType;
     }
 
+    @JsonProperty("givenName")
     public String getGivenName() {
         return givenName;
     }
 
+    @JsonProperty("givenName")
     public void setGivenName(String givenName) {
         this.givenName = givenName;
     }
 
+    @JsonProperty("familyName")
     public String getFamilyName() {
         return familyName;
     }
 
+    @JsonProperty("familyName")
     public void setFamilyName(String familyName) {
         this.familyName = familyName;
     }
 
+    @JsonProperty("nameIdentifiers")
     public Set<NameIdentifier> getNameIdentifiers() {
         return nameIdentifiers;
     }
 
+    @JsonProperty("nameIdentifiers")
     public void setNameIdentifiers(Set<NameIdentifier> nameIdentifiers) {
         this.nameIdentifiers = nameIdentifiers;
     }
 
+    @JsonProperty("affiliations")
     public Set<Affiliation> getAffiliations() {
         return affiliations;
     }
 
+    @JsonProperty("affiliations")
     public void setAffiliations(Set<Affiliation> affiliations) {
         this.affiliations = affiliations;
     }
 
+    @JsonProperty("lang")
     public String getLang() {
         return lang;
     }
 
+    @JsonProperty("lang")
     public void setLang(String lang) {
         this.lang = lang;
+    }
+
+    @JsonAnyGetter
+    public Map<String, Object> getAdditionalProperties() {
+        return this.additionalProperties;
+    }
+
+    @JsonAnySetter
+    public void setAdditionalProperty(String name, Object value) {
+        this.additionalProperties.put(name, value);
     }
 
     @Override
@@ -167,6 +207,10 @@ public class Contributor {
         sb.append('=');
         sb.append(((this.lang == null)?"<null>":this.lang));
         sb.append(',');
+        sb.append("additionalProperties");
+        sb.append('=');
+        sb.append(((this.additionalProperties == null)?"<null>":this.additionalProperties));
+        sb.append(',');
         if (sb.charAt((sb.length()- 1)) == ',') {
             sb.setCharAt((sb.length()- 1), ']');
         } else {
@@ -185,6 +229,7 @@ public class Contributor {
         result = ((result* 31)+((this.nameIdentifiers == null)? 0 :this.nameIdentifiers.hashCode()));
         result = ((result* 31)+((this.affiliations == null)? 0 :this.affiliations.hashCode()));
         result = ((result* 31)+((this.contributorType == null)? 0 :this.contributorType.hashCode()));
+        result = ((result* 31)+((this.additionalProperties == null)? 0 :this.additionalProperties.hashCode()));
         result = ((result* 31)+((this.lang == null)? 0 :this.lang.hashCode()));
         return result;
     }
@@ -198,53 +243,32 @@ public class Contributor {
             return false;
         }
         Contributor rhs = ((Contributor) other);
-        return (((((((((this.nameType == rhs.nameType)||((this.nameType!= null)&&this.nameType.equals(rhs.nameType)))&&((this.givenName == rhs.givenName)||((this.givenName!= null)&&this.givenName.equals(rhs.givenName))))&&((this.familyName == rhs.familyName)||((this.familyName!= null)&&this.familyName.equals(rhs.familyName))))&&((this.name == rhs.name)||((this.name!= null)&&this.name.equals(rhs.name))))&&((this.nameIdentifiers == rhs.nameIdentifiers)||((this.nameIdentifiers!= null)&&this.nameIdentifiers.equals(rhs.nameIdentifiers))))&&((this.affiliations == rhs.affiliations)||((this.affiliations!= null)&&this.affiliations.equals(rhs.affiliations))))&&((this.contributorType == rhs.contributorType)||((this.contributorType!= null)&&this.contributorType.equals(rhs.contributorType))))&&((this.lang == rhs.lang)||((this.lang!= null)&&this.lang.equals(rhs.lang))));
+        return ((((((((((this.nameType == rhs.nameType)||((this.nameType!= null)&&this.nameType.equals(rhs.nameType)))&&((this.givenName == rhs.givenName)||((this.givenName!= null)&&this.givenName.equals(rhs.givenName))))&&((this.familyName == rhs.familyName)||((this.familyName!= null)&&this.familyName.equals(rhs.familyName))))&&((this.name == rhs.name)||((this.name!= null)&&this.name.equals(rhs.name))))&&((this.nameIdentifiers == rhs.nameIdentifiers)||((this.nameIdentifiers!= null)&&this.nameIdentifiers.equals(rhs.nameIdentifiers))))&&((this.affiliations == rhs.affiliations)||((this.affiliations!= null)&&this.affiliations.equals(rhs.affiliations))))&&((this.contributorType == rhs.contributorType)||((this.contributorType!= null)&&this.contributorType.equals(rhs.contributorType))))&&((this.additionalProperties == rhs.additionalProperties)||((this.additionalProperties!= null)&&this.additionalProperties.equals(rhs.additionalProperties))))&&((this.lang == rhs.lang)||((this.lang!= null)&&this.lang.equals(rhs.lang))));
     }
 
     @Generated("jsonschema2pojo")
     public enum ContributorType {
 
-        @SerializedName("ContactPerson")
         CONTACT_PERSON("ContactPerson"),
-        @SerializedName("DataCollector")
         DATA_COLLECTOR("DataCollector"),
-        @SerializedName("DataCurator")
         DATA_CURATOR("DataCurator"),
-        @SerializedName("DataManager")
         DATA_MANAGER("DataManager"),
-        @SerializedName("Distributor")
         DISTRIBUTOR("Distributor"),
-        @SerializedName("Editor")
         EDITOR("Editor"),
-        @SerializedName("HostingInstitution")
         HOSTING_INSTITUTION("HostingInstitution"),
-        @SerializedName("Producer")
         PRODUCER("Producer"),
-        @SerializedName("ProjectLeader")
         PROJECT_LEADER("ProjectLeader"),
-        @SerializedName("ProjectManager")
         PROJECT_MANAGER("ProjectManager"),
-        @SerializedName("ProjectMember")
         PROJECT_MEMBER("ProjectMember"),
-        @SerializedName("RegistrationAgency")
         REGISTRATION_AGENCY("RegistrationAgency"),
-        @SerializedName("RegistrationAuthority")
         REGISTRATION_AUTHORITY("RegistrationAuthority"),
-        @SerializedName("RelatedPerson")
         RELATED_PERSON("RelatedPerson"),
-        @SerializedName("Researcher")
         RESEARCHER("Researcher"),
-        @SerializedName("ResearchGroup")
         RESEARCH_GROUP("ResearchGroup"),
-        @SerializedName("RightsHolder")
         RIGHTS_HOLDER("RightsHolder"),
-        @SerializedName("Sponsor")
         SPONSOR("Sponsor"),
-        @SerializedName("Supervisor")
         SUPERVISOR("Supervisor"),
-        @SerializedName("WorkPackageLeader")
         WORK_PACKAGE_LEADER("WorkPackageLeader"),
-        @SerializedName("Other")
         OTHER("Other");
         private final String value;
         private final static Map<String, Contributor.ContributorType> CONSTANTS = new HashMap<String, Contributor.ContributorType>();
@@ -264,10 +288,12 @@ public class Contributor {
             return this.value;
         }
 
+        @JsonValue
         public String value() {
             return this.value;
         }
 
+        @JsonCreator
         public static Contributor.ContributorType fromValue(String value) {
             Contributor.ContributorType constant = CONSTANTS.get(value);
             if (constant == null) {

@@ -4,9 +4,21 @@ package edu.kit.datacite.kernel_4;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.processing.Generated;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonValue;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({
+    "date",
+    "dateType",
+    "dateInformation"
+})
 @Generated("jsonschema2pojo")
 public class Date {
 
@@ -15,26 +27,26 @@ public class Date {
      * (Required)
      * 
      */
-    @SerializedName("date")
-    @Expose
+    @JsonProperty("date")
     private String date;
     /**
      * 
      * (Required)
      * 
      */
-    @SerializedName("dateType")
-    @Expose
+    @JsonProperty("dateType")
     private Date.DateType dateType;
-    @SerializedName("dateInformation")
-    @Expose
+    @JsonProperty("dateInformation")
     private String dateInformation;
+    @JsonIgnore
+    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      * 
      * (Required)
      * 
      */
+    @JsonProperty("date")
     public String getDate() {
         return date;
     }
@@ -44,6 +56,7 @@ public class Date {
      * (Required)
      * 
      */
+    @JsonProperty("date")
     public void setDate(String date) {
         this.date = date;
     }
@@ -53,6 +66,7 @@ public class Date {
      * (Required)
      * 
      */
+    @JsonProperty("dateType")
     public Date.DateType getDateType() {
         return dateType;
     }
@@ -62,16 +76,29 @@ public class Date {
      * (Required)
      * 
      */
+    @JsonProperty("dateType")
     public void setDateType(Date.DateType dateType) {
         this.dateType = dateType;
     }
 
+    @JsonProperty("dateInformation")
     public String getDateInformation() {
         return dateInformation;
     }
 
+    @JsonProperty("dateInformation")
     public void setDateInformation(String dateInformation) {
         this.dateInformation = dateInformation;
+    }
+
+    @JsonAnyGetter
+    public Map<String, Object> getAdditionalProperties() {
+        return this.additionalProperties;
+    }
+
+    @JsonAnySetter
+    public void setAdditionalProperty(String name, Object value) {
+        this.additionalProperties.put(name, value);
     }
 
     @Override
@@ -90,6 +117,10 @@ public class Date {
         sb.append('=');
         sb.append(((this.dateInformation == null)?"<null>":this.dateInformation));
         sb.append(',');
+        sb.append("additionalProperties");
+        sb.append('=');
+        sb.append(((this.additionalProperties == null)?"<null>":this.additionalProperties));
+        sb.append(',');
         if (sb.charAt((sb.length()- 1)) == ',') {
             sb.setCharAt((sb.length()- 1), ']');
         } else {
@@ -104,6 +135,7 @@ public class Date {
         result = ((result* 31)+((this.date == null)? 0 :this.date.hashCode()));
         result = ((result* 31)+((this.dateInformation == null)? 0 :this.dateInformation.hashCode()));
         result = ((result* 31)+((this.dateType == null)? 0 :this.dateType.hashCode()));
+        result = ((result* 31)+((this.additionalProperties == null)? 0 :this.additionalProperties.hashCode()));
         return result;
     }
 
@@ -116,33 +148,22 @@ public class Date {
             return false;
         }
         Date rhs = ((Date) other);
-        return ((((this.date == rhs.date)||((this.date!= null)&&this.date.equals(rhs.date)))&&((this.dateInformation == rhs.dateInformation)||((this.dateInformation!= null)&&this.dateInformation.equals(rhs.dateInformation))))&&((this.dateType == rhs.dateType)||((this.dateType!= null)&&this.dateType.equals(rhs.dateType))));
+        return (((((this.date == rhs.date)||((this.date!= null)&&this.date.equals(rhs.date)))&&((this.dateInformation == rhs.dateInformation)||((this.dateInformation!= null)&&this.dateInformation.equals(rhs.dateInformation))))&&((this.dateType == rhs.dateType)||((this.dateType!= null)&&this.dateType.equals(rhs.dateType))))&&((this.additionalProperties == rhs.additionalProperties)||((this.additionalProperties!= null)&&this.additionalProperties.equals(rhs.additionalProperties))));
     }
 
     @Generated("jsonschema2pojo")
     public enum DateType {
 
-        @SerializedName("Accepted")
         ACCEPTED("Accepted"),
-        @SerializedName("Available")
         AVAILABLE("Available"),
-        @SerializedName("Copyrighted")
         COPYRIGHTED("Copyrighted"),
-        @SerializedName("Collected")
         COLLECTED("Collected"),
-        @SerializedName("Created")
         CREATED("Created"),
-        @SerializedName("Issued")
         ISSUED("Issued"),
-        @SerializedName("Submitted")
         SUBMITTED("Submitted"),
-        @SerializedName("Updated")
         UPDATED("Updated"),
-        @SerializedName("Valid")
         VALID("Valid"),
-        @SerializedName("Withdrawn")
         WITHDRAWN("Withdrawn"),
-        @SerializedName("Other")
         OTHER("Other");
         private final String value;
         private final static Map<String, Date.DateType> CONSTANTS = new HashMap<String, Date.DateType>();
@@ -150,6 +171,7 @@ public class Date {
         static {
             for (Date.DateType c: values()) {
                 CONSTANTS.put(c.value, c);
+                CONSTANTS.put(c.name(), c);
             }
         }
 
@@ -162,10 +184,12 @@ public class Date {
             return this.value;
         }
 
+        @JsonValue
         public String value() {
             return this.value;
         }
 
+        @JsonCreator
         public static Date.DateType fromValue(String value) {
             Date.DateType constant = CONSTANTS.get(value);
             if (constant == null) {
