@@ -243,7 +243,11 @@ public class Main4Rest {
     // String[] allClientIds = {"!metastore_Schema_ID", "!coscine_Schema_ID", "!metastore_metadata_ID", "coscine_Metadata_ID"};
     // to allow only coscine metadata server.
     /////////////////////////////////////////////////////////////////////////////
-    String[] allClientIds = {"metastore_Schema_ID", "!coscine_Schema_ID", "!metastore_metadata_ID", "!coscine_Metadata_ID"};
+    String[] allClientIds = {"!metastore_Schema_ID", "coscine_Schema_ID", "!metastore_metadata_ID", "!coscine_Metadata_ID"};
+    listOperations.add(DoipConstants.OP_CREATE);
+    listOperations.add(DoipConstants.OP_RETRIEVE);
+    listOperations.add(DoipConstants.OP_UPDATE);
+    listOperations.add(DoipConstants.OP_SEARCH);
     String clientId = allClientIds[0];
     skip = false;
     if (clientId.startsWith("!")) {
@@ -255,15 +259,10 @@ public class Main4Rest {
 //    authInfo = null;
     if (!skip) {
       printHeader("HELLO " + clientId);
-      listOperations = new ArrayList<>();
-      listOperations.add(DoipConstants.OP_CREATE);
-      listOperations.add(DoipConstants.OP_RETRIEVE);
-      listOperations.add(DoipConstants.OP_UPDATE);
-      listOperations.add(DoipConstants.OP_SEARCH);
 
 // Hello not available via REST
 //      result = client.hello(TARGET_ONE, authInfo, serviceInfo);
-//   t   printResult(result);
+//      printResult(result);
 // List operations not available via REST
 //      // Request 0.DOIP/Op.ListOperations
 //      printHeader("LIST_OPERATIONS");
@@ -282,7 +281,7 @@ public class Main4Rest {
         for (Content headerElement : result.getHeader()) {
           if (headerElement.getId().equalsIgnoreCase("ETag")) {
             eTag = headerElement.getValue();
-        printHeader("ETag: " + eTag);
+            printHeader("ETag: " + eTag);
           }
         }
       } else {
@@ -291,15 +290,6 @@ public class Main4Rest {
       if (listOperations.contains(DoipConstants.OP_RETRIEVE)) {
         // Request 0.DOIP/Op.Retrieve
         printHeader("Retrieve without elements!");
-//        RestDoip retrieveWithoutElements = new RestDoip();
-//        retrieveWithoutElements.setClientId(clientId);
-//        retrieveWithoutElements.setId(schemaId);
-//        retrieveWithoutElements.setToken("noToken2");
-//        retrieveWithoutElements.setDatacite(result.getDatacite());
-//        Content content = new Content();
-//        content.setId("metadata");
-//        content.setValue("Any value");
-//        retrieveWithoutElements.getElements().add(content);
 
         Datacite43Schema datacite = new Datacite43Schema();
         restDoip = toEmptyRestDoip(datacite, clientId, "noToken");
@@ -311,8 +301,8 @@ public class Main4Rest {
         content.setId("metadata");
         content.setValue("Any value");
         restDoip.getElements().add(content);
-        
-         result = serveRest(restDoip, Operations.OP_RETRIEVE, schemaId);
+
+        result = serveRest(restDoip, Operations.OP_RETRIEVE, schemaId);
         printResult(result);
 
         printHeader("Retrieve metadata and schema elements!");
@@ -320,8 +310,8 @@ public class Main4Rest {
         content.setId("schema");
         content.setValue("Any value");
         restDoip.getElements().add(content);
-        
-         result = serveRest(restDoip, Operations.OP_RETRIEVE, schemaId);
+
+        result = serveRest(restDoip, Operations.OP_RETRIEVE, schemaId);
         printResult(result);
 
       } else {
@@ -330,9 +320,9 @@ public class Main4Rest {
       if (listOperations.contains(DoipConstants.OP_UPDATE)) {
         // Request 0.DOIP/Op.Update
         printHeader("update digital object");
-         printHeader("ETag: " + eTag);
-       DigitalObject updateSchema = updateSchema(id, eTag);
-         restDoip = toRestDoip(updateSchema, clientId, "noToken");
+        printHeader("ETag: " + eTag);
+        DigitalObject updateSchema = updateSchema(id, eTag);
+        restDoip = toRestDoip(updateSchema, clientId, "noToken");
         result = serveRest(restDoip, Operations.OP_UPDATE, schemaId);
         printResult(result);
       } else {
@@ -353,38 +343,39 @@ public class Main4Rest {
         printHeader("Skip Search...");
 
       }
-      printHeader("End of test for clientID: " + clientId);
-//    }
-//    /**
-//     * ************************************************************************
-//     * Test of next clientID (application profiles)
-//     */
-//    clientId = allClientIds[1];
-//    skip = false;
-//    if (clientId.startsWith("!")) {
-//      clientId = clientId.substring(1);
-//      skip = true;
-//      printHeader("Skip tests for " + clientId);
-//    }
-//    authInfo = new TokenAuthenticationInfo(clientId, bearerToken);
-////    authInfo = null;
-//
-//    if (!skip) {
-//      printHeader("HELLO " + clientId);
-//
+    }
+    printHeader("End of test for clientID: " + clientId);
+
+    /**
+     * ************************************************************************
+     * Test of next clientID (application profiles)
+     */
+    clientId = allClientIds[1];
+    skip = false;
+    if (clientId.startsWith("!")) {
+      clientId = clientId.substring(1);
+      skip = true;
+      printHeader("Skip tests for " + clientId);
+    }
+    authInfo = new TokenAuthenticationInfo(clientId, bearerToken);
+//    authInfo = null;
+
+    if (!skip) {
+      printHeader("HELLO " + clientId);
+
+// Hello not available via REST
 //      result = client.hello(TARGET_ONE, authInfo, serviceInfo);
 //      printResult(result);
-//
+// List operations not available via REST
 //      // Request 0.DOIP/Op.ListOperations
 //      printHeader("LIST_OPERATIONS");
 //      listOperations = client.listOperations(TARGET_ONE, authInfo, serviceInfo);
 //      System.out.println(listOperations);
-//
+      // Request 0.DOIP/Op.Create
+/////////////////////////////////////////////////////////////////////////
+// Skip create for the moment.
+/////////////////////////////////////////////////////////////////////////
 //      if (listOperations.contains(DoipConstants.OP_CREATE)) {
-//        // Request 0.DOIP/Op.Create
-///////////////////////////////////////////////////////////////////////////
-//// Skip create for the moment.
-///////////////////////////////////////////////////////////////////////////
 //        printHeader("Create...");
 //        dobj = createSchema();
 //        result = client.create(dobj, authInfo, serviceInfo);
@@ -396,43 +387,49 @@ public class Main4Rest {
 //      } else {
 //        printHeader("Skip Create...");
 //      }
-//      if (listOperations.contains(DoipConstants.OP_RETRIEVE)) {
-//        // Request 0.DOIP/Op.Retrieve
-//        id = new String("https://purl.org/coscine/ap/radar/");
-//        printHeader("Retrieve without elements!");
-//        result = client.retrieve(id, false, authInfo, serviceInfo);
-//        printResult(result);
-//
-//        printHeader("Retrieve all elements!");
-//        result = client.retrieve(id, true, authInfo, serviceInfo);
-//        printResult(result);
-//
-//        printHeader("Retrieve one element!");
-//        element = client.retrieveElement(id, "schema", authInfo, serviceInfo);
-//        printResult(element);
-//
-//        printHeader("Retrieve metadata element!");
-//        element = client.retrieveElement(id, "metadata", authInfo, serviceInfo);
-//        printResult(element);
-//        printHeader("Retrieve wrong element!");
-//        element = client.retrieveElement(id, "invalidElement", authInfo, serviceInfo);
-//        reader = new JsonReader(new InputStreamReader(element));
-//        result = gson.fromJson(reader, DigitalObject.class);
-//        printResult(result);
-//      } else {
-//        printHeader("Skip Retrieve...");
-//      }
-//      if (listOperations.contains(DoipConstants.OP_UPDATE)) {
-//        // Request 0.DOIP/Op.Update
-//        printHeader("Update digital object");
-//        DigitalObject updateSchema = updateSchema(id, eTag);
-//        result = client.update(updateSchema, authInfo, serviceInfo);
-//        printResult(result);
-//      } else {
-//        printHeader("Skip Update...");
-//
-//      }
-//      if (listOperations.contains(DoipConstants.OP_SEARCH)) {
+      if (listOperations.contains(DoipConstants.OP_RETRIEVE)) {
+        // Request 0.DOIP/Op.Retrieve
+        id = new String("https://purl.org/coscine/ap/radar/");
+        printHeader("Retrieve without elements!");
+        Datacite43Schema datacite = new Datacite43Schema();
+        restDoip = toEmptyRestDoip(datacite, clientId, "noToken");
+        result = serveRest(restDoip, Operations.OP_RETRIEVE, id);
+//      result = client.retrieve(id, false, authInfo, serviceInfo);
+        printResult(result);
+
+        printHeader("Retrieve metadata element!");
+        Content content = new Content();
+        content.setId("metadata");
+        content.setValue("Any value");
+        restDoip.getElements().add(content);
+
+        result = serveRest(restDoip, Operations.OP_RETRIEVE, id);
+        printResult(result);
+
+        printHeader("Retrieve metadata and schema elements!");
+        content = new Content();
+        content.setId("schema");
+        content.setValue("Any value");
+        restDoip.getElements().add(content);
+
+        result = serveRest(restDoip, Operations.OP_RETRIEVE, id);
+        printResult(result);
+      } else {
+        printHeader("Skip Retrieve...");
+      }
+      if (listOperations.contains(DoipConstants.OP_UPDATE)) {
+        // Request 0.DOIP/Op.Update
+        printHeader("Update digital object");
+        DigitalObject updateSchema = updateSchema(id, eTag);
+        restDoip = toRestDoip(updateSchema, clientId, "noToken");
+        result = serveRest(restDoip, Operations.OP_UPDATE, schemaId);
+//    result = client.update(updateSchema, authInfo, serviceInfo);
+        printResult(result);
+      } else {
+        printHeader("Skip Update...");
+
+      }
+      if (listOperations.contains(DoipConstants.OP_SEARCH)) {
 //        // Request 0.DOIP/Op.Update
 //        printHeader("Search digital object");
 //        DigitalObject updateSchema = updateSchema(id, eTag);
@@ -443,89 +440,98 @@ public class Main4Rest {
 //        while (iterator.hasNext()) {
 //          printResult(iterator.next());
 //        }
-//      } else {
-//        printHeader("Skip Search...");
-//
-//      }
-//      printHeader("End of test for clientID: " + clientId);
-//    }
-//    /**
-//     * ************************************************************************
-//     * Test of next clientID (Metadata Documents 4 MetaStore)
-//     */
-//    clientId = allClientIds[2];
-//    skip = false;
-//    if (clientId.startsWith("!")) {
-//      clientId = clientId.substring(1);
-//      skip = true;
-//      printHeader("Skip tests for " + clientId);
-//    }
-//    authInfo = new TokenAuthenticationInfo(clientId, "myPersonalToken");
-////    authInfo = null;
-//
-//    if (!skip) {
-//      printHeader("HELLO " + clientId);
-//
+      } else {
+        printHeader("Skip Search...");
+
+      }
+    }
+    printHeader("End of test for clientID: " + clientId);
+
+    /**
+     * ************************************************************************
+     * Test of next clientID (Metadata Documents 4 MetaStore)
+     */
+    clientId = allClientIds[2];
+    skip = false;
+
+    if (clientId.startsWith("!")) {
+      clientId = clientId.substring(1);
+      skip = true;
+      printHeader("Skip tests for " + clientId);
+    }
+    authInfo = new TokenAuthenticationInfo(clientId, "myPersonalToken");
+//    authInfo = null;
+
+    if (!skip) {
+// Hello not available via REST
 //      result = client.hello(TARGET_ONE, authInfo, serviceInfo);
 //      printResult(result);
-//
+// List operations not available via REST
 //      // Request 0.DOIP/Op.ListOperations
 //      printHeader("LIST_OPERATIONS");
 //      listOperations = client.listOperations(TARGET_ONE, authInfo, serviceInfo);
 //      System.out.println(listOperations);
-//      id = "anyId";
-//      eTag = "anyETag";
-//      element = null;
-//      reader = null;
-//      // Request 0.DOIP/Op.Create
-//      if (listOperations.contains(DoipConstants.OP_CREATE)) {
-//        printHeader("Create...");
-//        dobj = createMetadataDocument(schemaId);
-//        result = client.create(dobj, authInfo, serviceInfo);
-//        printResult(result);
-//        id = result.id;
-//        // Fetch also ETag from header
-//        eTag = result.attributes.getAsJsonObject("header").get("ETag").getAsString();
-//        printHeader("eTag = " + eTag);
-//      } else {
-//        printHeader("Skip Create...");
-//      }
-//      if (listOperations.contains(DoipConstants.OP_RETRIEVE)) {
-//        // Request 0.DOIP/Op.Retrieve
-//        printHeader("Retrieve without elements!");
-//        result = client.retrieve(id, false, authInfo, serviceInfo);
-//        printResult(result);
-//
-//        printHeader("Retrieve all elements!");
-//        result = client.retrieve(id, true, authInfo, serviceInfo);
-//        printResult(result);
-//
-//        printHeader("Retrieve one element!");
-//        element = client.retrieveElement(id, "document", authInfo, serviceInfo);
-//        printResult(element);
-//
-//        printHeader("Retrieve metadata element!");
-//        element = client.retrieveElement(id, "metadata", authInfo, serviceInfo);
-//        printResult(element);
-//        printHeader("Retrieve wrong element!");
-//        element = client.retrieveElement(id, "invalidElement", authInfo, serviceInfo);
-//        reader = new JsonReader(new InputStreamReader(element));
-//        result = gson.fromJson(reader, DigitalObject.class);
-//        printResult(result);
-//      } else {
-//        printHeader("Skip Retrieve...");
-//      }
-//      if (listOperations.contains(DoipConstants.OP_UPDATE)) {
-//        // Request 0.DOIP/Op.Update
-//        printHeader("update digital object");
-//        DigitalObject updateSchema = updateMetadataDocument(id, schemaId, eTag);
-//        updateSchema.id = id;
-//        result = client.update(updateSchema, authInfo, serviceInfo);
-//        printResult(result);
-//      } else {
-//        printHeader("Skip Update...");
-//      }
-//      if (listOperations.contains(DoipConstants.OP_SEARCH)) {
+      // Request 0.DOIP/Op.Create
+      if (listOperations.contains(DoipConstants.OP_CREATE)) {
+        printHeader("Create...");
+        dobj = createMetadataDocument(schemaId);
+        restDoip = toRestDoip(dobj, clientId, "noToken");
+        result = serveRest(restDoip, Operations.OP_CREATE, null);
+        printResult(result);
+        id = result.getId();
+        // Fetch also ETag from header
+        for (Content headerElement : result.getHeader()) {
+          if (headerElement.getId().equalsIgnoreCase("ETag")) {
+            eTag = headerElement.getValue();
+            printHeader("ETag: " + eTag);
+          }
+        }
+        printHeader("eTag = " + eTag);
+      } else {
+        printHeader("Skip Create...");
+      }
+      if (listOperations.contains(DoipConstants.OP_RETRIEVE)) {
+        // Request 0.DOIP/Op.Retrieve
+        printHeader("Retrieve without elements!");
+
+        Datacite43Schema datacite = new Datacite43Schema();
+        restDoip = toEmptyRestDoip(datacite, clientId, "noToken");
+        result = serveRest(restDoip, Operations.OP_RETRIEVE, id);
+        printResult(result);
+
+        printHeader("Retrieve metadata element!");
+        Content content = new Content();
+        content.setId("metadata");
+        content.setValue("Any value");
+        restDoip.getElements().add(content);
+
+        result = serveRest(restDoip, Operations.OP_RETRIEVE, id);
+        printResult(result);
+
+        printHeader("Retrieve metadata and schema elements!");
+        content = new Content();
+        content.setId("schema");
+        content.setValue("Any value");
+        restDoip.getElements().add(content);
+
+        result = serveRest(restDoip, Operations.OP_RETRIEVE, id);
+        printResult(result);
+
+      } else {
+        printHeader("Skip Retrieve...");
+      }
+      if (listOperations.contains(DoipConstants.OP_UPDATE)) {
+        // Request 0.DOIP/Op.Update
+        printHeader("update digital object");
+        DigitalObject updateSchema = updateMetadataDocument(id, schemaId, eTag);
+        updateSchema.id = id;
+        restDoip = toRestDoip(updateSchema, clientId, "noToken");
+        result = serveRest(restDoip, Operations.OP_UPDATE, id);
+        printResult(result);
+      } else {
+        printHeader("Skip Update...");
+      }
+      if (listOperations.contains(DoipConstants.OP_SEARCH)) {
 //        // Request 0.DOIP/Op.Update
 //        printHeader("Search digital object");
 //        DigitalObject updateSchema = updateSchema(id, eTag);
@@ -536,15 +542,15 @@ public class Main4Rest {
 //        while (iterator.hasNext()) {
 //          printResult(iterator.next());
 //        }
-//      } else {
-//        printHeader("Skip Search...");
-//
-//      }
-//      printHeader("End of test for clientID: " + clientId);
-//    }
+      } else {
+        printHeader("Skip Search...");
+
+      }
+      printHeader("End of test for clientID: " + clientId);
+    }
 //    /**
 //     * ************************************************************************
-//     * Test of next clientID (Metadata Documents 4 MetaStore)
+//     * Test of next clientID (Metadata Documents 4 Coscine)
 //     */
 //    clientId = allClientIds[3];
 //    skip = false;
@@ -638,8 +644,10 @@ public class Main4Rest {
 //        printHeader("Skip Search...");
 //
 //      }
-      printHeader("End of test for clientID: " + clientId);
-    }
+//
+//    printHeader("End of test for clientID: " + clientId);
+//  }
+
     System.exit(0);
 
   }
@@ -649,6 +657,7 @@ public class Main4Rest {
     SimpleDateFormat sdf = new SimpleDateFormat("_yyyy_MM_dd_HH_mm");
     Title title = new Title();
     title.setTitle("schema" + sdf.format(new Date()));
+    title.setTitleType(Title.TitleType.OTHER);
     datacite.getTitles().add(title);
     datacite.setPublisher("NFDI4Ing");
     datacite.getFormats().add("JSON");//application/json");
@@ -672,6 +681,7 @@ public class Main4Rest {
     Datacite43Schema datacite = new Datacite43Schema();
     Title title = new Title();
     title.setTitle(id);
+    title.setTitleType(Title.TitleType.OTHER);
     datacite.getTitles().add(title);
     datacite.setPublisher("NFDI4Ing");
     datacite.getFormats().add("JSON");//application/json");
@@ -699,6 +709,7 @@ public class Main4Rest {
     SimpleDateFormat sdf = new SimpleDateFormat("_yyyy_MM_dd_HH_mm");
     Title title = new Title();
     title.setTitle("document" + sdf.format(new Date()));
+    title.setTitleType(Title.TitleType.OTHER);
     datacite.getTitles().add(title);
     datacite.setPublisher("NFDI4Ing");
 
@@ -734,6 +745,7 @@ public class Main4Rest {
     SimpleDateFormat sdf = new SimpleDateFormat("_yyyy_MM_dd_HH_mm");
     Title title = new Title();
     title.setTitle("document" + sdf.format(new Date()));
+    title.setTitleType(Title.TitleType.OTHER);
     datacite.getTitles().add(title);
     datacite.setPublisher("NFDI4Ing");
 
@@ -762,6 +774,7 @@ public class Main4Rest {
     Datacite43Schema datacite = new Datacite43Schema();
     Title title = new Title();
     title.setTitle(id);
+    title.setTitleType(Title.TitleType.OTHER);
     datacite.getTitles().add(title);
     datacite.setPublisher("NFDI4Ing");
 
@@ -791,7 +804,7 @@ public class Main4Rest {
     element.id = "document";
     element.type = "application/json";
     element.in = new ByteArrayInputStream(JSON_DOCUMENT_V2.getBytes());
-    element.length = (long) JSON_DOCUMENT.getBytes().length;
+    element.length = (long) JSON_DOCUMENT_V2.getBytes().length;
     dobj.elements.add(element);
 
     return dobj;
@@ -802,6 +815,7 @@ public class Main4Rest {
     SimpleDateFormat sdf = new SimpleDateFormat("_yyyy_MM_dd_HH_mm");
     Title title = new Title();
     title.setTitle("Final test update document" + sdf.format(new Date()));
+    title.setTitleType(Title.TitleType.OTHER);
     datacite.getTitles().add(title);
     datacite.setPublisher("NFDI4Ing");
 
@@ -852,8 +866,24 @@ public class Main4Rest {
     if (digitalObject.attributes != null && !digitalObject.attributes.isJsonNull()) {
       if (digitalObject.attributes.get("datacite") != null && !digitalObject.attributes.get("datacite").isJsonNull()) {
         String dataciteString = digitalObject.attributes.get("datacite").getAsString();
+        String before = dataciteString;
+        for (RelatedIdentifier.RelationType type : RelatedIdentifier.RelationType.values()) {
+          dataciteString = dataciteString.replace(addQuotes(type.value()), addQuotes(type.name()));
+        }
+        for (RelatedIdentifier.RelatedIdentifierType type : RelatedIdentifier.RelatedIdentifierType.values()) {
+          dataciteString = dataciteString.replace(addQuotes(type.value()), addQuotes(type.name()));
+        }
+        System.out.println("===============================================================");
+        System.out.println("===============================================================");
+        System.out.println(before);
+        System.out.println("===============================================================");
+        System.out.println(dataciteString);
+        System.out.println("===============================================================");
+        System.out.println("===============================================================");
         ObjectMapper mapper = new ObjectMapper();
-        Datacite43Schema datacite = mapper.readValue(dataciteString, Datacite43Schema.class);
+        printHeader("Datacite: \n" + dataciteString);
+        Datacite43Schema datacite = mapper.readValue(dataciteString, Datacite43Schema.class
+        );
         returnValue.setDatacite(datacite);
       }
       if (digitalObject.attributes.get("header") != null && !digitalObject.attributes.get("header").isJsonNull()) {
@@ -933,8 +963,48 @@ public class Main4Rest {
 
     SimpleServiceClient simpleClient = SimpleServiceClient.create(baseUrl + "?operationId=" + operation.name() + "&targetId=" + targetId);
     simpleClient.accept(MediaType.parseMediaType(acceptType));
-    RestDoip returnValue = simpleClient.postResource(input, RestDoip.class);
+    ObjectMapper mapper = new ObjectMapper();
+    String jsonStr = "null";
+    RestDoip result = null;
+    try {
 
+      jsonStr = mapper.writeValueAsString(input);
+      System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+      System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+      System.out.println(jsonStr);
+      System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+      System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+      for (RelatedIdentifier.RelationType type : RelatedIdentifier.RelationType.values()) {
+        jsonStr = jsonStr.replace(addQuotes(type.value()), addQuotes(type.name()));
+      }
+      for (RelatedIdentifier.RelatedIdentifierType type : RelatedIdentifier.RelatedIdentifierType.values()) {
+        jsonStr = jsonStr.replace(addQuotes(type.value()), addQuotes(type.name()));
+
+      }
+
+//      String returnValue = simpleClient.postResource(jsonStr, String.class);
+//      result = mapper.readValue(returnValue, RestDoip.class);
+      result = simpleClient.postResource(input, RestDoip.class
+      );
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return result;
+  }
+
+  /**
+   * Add quotes to a string to avoid partly replacement for values inside a json
+   * document.
+   *
+   * @param value value without quotes.
+   * @return value with quotes.
+   */
+  private static String addQuotes(String value) {
+    String returnValue = value;
+    String quote = "\"";
+    if (!value.startsWith(quote) && !value.endsWith(quote)) {
+      returnValue = quote + value + quote;
+    }
     return returnValue;
   }
 }

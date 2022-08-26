@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
  * @author hartmann-v
  */
 public class Main {
+
   /**
    * Logger.
    */
@@ -174,7 +175,7 @@ public class Main {
    * @throws net.dona.doip.client.DoipException
    */
   public static void main(String[] args) throws IOException, DoipException {
-    if (args.length > 1 ) {
+    if (args.length > 1) {
       System.out.println("Test the REST!!!");
       Main4Rest.main(args);
       return;
@@ -448,7 +449,7 @@ public class Main {
       // Request 0.DOIP/Op.Create
       if (listOperations.contains(DoipConstants.OP_CREATE)) {
         printHeader("Create...");
-      dobj = createMetadataDocument(schemaId);
+        dobj = createMetadataDocument(schemaId);
         result = client.create(dobj, authInfo, serviceInfo);
         printResult(result);
         id = result.id;
@@ -534,8 +535,8 @@ public class Main {
       printHeader("LIST_OPERATIONS");
       listOperations = client.listOperations(TARGET_ONE, authInfo, serviceInfo);
       System.out.println(listOperations);
-        SimpleDateFormat sdf
-            = new SimpleDateFormat("-yyyy-MM-dd-HH-mm");
+      SimpleDateFormat sdf
+              = new SimpleDateFormat("-yyyy-MM-dd-HH-mm");
       id = "62b97a86-d3cf-4517-9b09-6a09cd9b476d";
       id = "21.11102/62b97a86-d3cf-4517-9b09-6a09cd9b476d#path=/newfile.txt";
       id = "21.11102/62b97a86-d3cf-4517-9b09-6a09cd9b476d#path=/coscine.txt";
@@ -617,6 +618,7 @@ public class Main {
     SimpleDateFormat sdf = new SimpleDateFormat("_yyyy_MM_dd_HH_mm");
     Title title = new Title();
     title.setTitle("schema" + sdf.format(new Date()));
+    title.setTitleType(Title.TitleType.OTHER);
     datacite.getTitles().add(title);
     datacite.setPublisher("NFDI4Ing");
     datacite.getFormats().add("JSON");//application/json");
@@ -640,6 +642,7 @@ public class Main {
     Datacite43Schema datacite = new Datacite43Schema();
     Title title = new Title();
     title.setTitle(id);
+    title.setTitleType(Title.TitleType.OTHER);
     datacite.getTitles().add(title);
     datacite.setPublisher("NFDI4Ing");
     datacite.getFormats().add("JSON");//application/json");
@@ -667,6 +670,7 @@ public class Main {
     SimpleDateFormat sdf = new SimpleDateFormat("_yyyy_MM_dd_HH_mm");
     Title title = new Title();
     title.setTitle("document" + sdf.format(new Date()));
+    title.setTitleType(Title.TitleType.OTHER);
     datacite.getTitles().add(title);
     datacite.setPublisher("NFDI4Ing");
 
@@ -702,6 +706,7 @@ public class Main {
     SimpleDateFormat sdf = new SimpleDateFormat("_yyyy_MM_dd_HH_mm");
     Title title = new Title();
     title.setTitle("document" + sdf.format(new Date()));
+    title.setTitleType(Title.TitleType.OTHER);
     datacite.getTitles().add(title);
     datacite.setPublisher("NFDI4Ing");
 
@@ -716,7 +721,7 @@ public class Main {
     element.in = new ByteArrayInputStream(COSCINE_METADATA_V1.getBytes());
     element.length = (long) COSCINE_METADATA_V1.getBytes().length;
     dobj.elements.add(element);
-    
+
     element = new Element();
     element.id = "digitalObjectId";
     element.type = "application/text";
@@ -730,6 +735,7 @@ public class Main {
     Datacite43Schema datacite = new Datacite43Schema();
     Title title = new Title();
     title.setTitle(id);
+    title.setTitleType(Title.TitleType.OTHER);
     datacite.getTitles().add(title);
     datacite.setPublisher("NFDI4Ing");
 
@@ -759,7 +765,7 @@ public class Main {
     element.id = "document";
     element.type = "application/json";
     element.in = new ByteArrayInputStream(JSON_DOCUMENT_V2.getBytes());
-    element.length = (long) JSON_DOCUMENT.getBytes().length;
+    element.length = (long) JSON_DOCUMENT_V2.getBytes().length;
     dobj.elements.add(element);
 
     return dobj;
@@ -770,12 +776,13 @@ public class Main {
     SimpleDateFormat sdf = new SimpleDateFormat("_yyyy_MM_dd_HH_mm");
     Title title = new Title();
     title.setTitle("Final test update document" + sdf.format(new Date()));
+    title.setTitleType(Title.TitleType.OTHER);
     datacite.getTitles().add(title);
     datacite.setPublisher("NFDI4Ing");
 
     String json = new Gson().toJson(datacite);
     DigitalObject dobj = new DigitalObject();
-    dobj.id = id; 
+    dobj.id = id;
     dobj.attributes = new JsonObject();
     dobj.attributes.addProperty("datacite", json);
     dobj.elements = new ArrayList<>();
@@ -812,7 +819,7 @@ public class Main {
       }
     }
   }
-  
+
   private static void printResult(InputStream inputStream) throws IOException {
     StringBuilder textBuilder = new StringBuilder("stream: '");
     if (inputStream != null) {
