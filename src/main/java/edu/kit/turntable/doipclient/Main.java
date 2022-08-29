@@ -354,14 +354,15 @@ public class Main {
 /////////////////////////////////////////////////////////////////////////
 // Skip create for the moment.
 /////////////////////////////////////////////////////////////////////////
-        printHeader("Create...");
-        dobj = createSchema();
-        result = client.create(dobj, authInfo, serviceInfo);
-        printResult(result);
-        id = result.id;
-        // Fetch also ETag from header
-        eTag = result.attributes.getAsJsonObject("header").get("ETag").getAsString();
-        printHeader("eTag = " + eTag);
+        printHeader("Skip Create...");
+//        printHeader("Create...");
+//        dobj = createSchema();
+//        result = client.create(dobj, authInfo, serviceInfo);
+//        printResult(result);
+//        id = result.id;
+//        // Fetch also ETag from header
+//        eTag = result.attributes.getAsJsonObject("header").get("ETag").getAsString();
+//        printHeader("eTag = " + eTag);
       } else {
         printHeader("Skip Create...");
       }

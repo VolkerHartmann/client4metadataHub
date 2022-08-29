@@ -25,6 +25,8 @@ public class RestDoip {
     private String id;
     @JsonProperty("clientId")
     private String clientId;
+    @JsonProperty("targetId")
+    private String targetId;
     @JsonProperty("token")
     private String token;
     @JsonProperty("datacite")
@@ -54,6 +56,16 @@ public class RestDoip {
     @JsonProperty("clientId")
     public void setClientId(String clientId) {
         this.clientId = clientId;
+    }
+
+    @JsonProperty("targetId")
+    public String getTargetId() {
+        return targetId;
+    }
+
+    @JsonProperty("targetId")
+    public void setTargetId(String targetId) {
+        this.targetId = targetId;
     }
 
     @JsonProperty("token")
