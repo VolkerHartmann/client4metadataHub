@@ -2,78 +2,111 @@
 package edu.kit.datacite.kernel_4;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 import javax.annotation.processing.Generated;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({
+    "rights",
+    "rightsURI",
+    "rightsIdentifier",
+    "rightsIdentifierScheme",
+    "schemeURI",
+    "lang"
+})
 @Generated("jsonschema2pojo")
 public class Rights {
 
-    @SerializedName("rights")
-    @Expose
+    @JsonProperty("rights")
     private String rights;
-    @SerializedName("rightsURI")
-    @Expose
+    @JsonProperty("rightsURI")
     private URI rightsURI;
-    @SerializedName("rightsIdentifier")
-    @Expose
+    @JsonProperty("rightsIdentifier")
     private String rightsIdentifier;
-    @SerializedName("rightsIdentifierScheme")
-    @Expose
+    @JsonProperty("rightsIdentifierScheme")
     private String rightsIdentifierScheme;
-    @SerializedName("schemeURI")
-    @Expose
+    @JsonProperty("schemeURI")
     private URI schemeURI;
-    @SerializedName("lang")
-    @Expose
+    @JsonProperty("lang")
     private String lang;
+    @JsonIgnore
+    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
+    @JsonProperty("rights")
     public String getRights() {
         return rights;
     }
 
+    @JsonProperty("rights")
     public void setRights(String rights) {
         this.rights = rights;
     }
 
+    @JsonProperty("rightsURI")
     public URI getRightsURI() {
         return rightsURI;
     }
 
+    @JsonProperty("rightsURI")
     public void setRightsURI(URI rightsURI) {
         this.rightsURI = rightsURI;
     }
 
+    @JsonProperty("rightsIdentifier")
     public String getRightsIdentifier() {
         return rightsIdentifier;
     }
 
+    @JsonProperty("rightsIdentifier")
     public void setRightsIdentifier(String rightsIdentifier) {
         this.rightsIdentifier = rightsIdentifier;
     }
 
+    @JsonProperty("rightsIdentifierScheme")
     public String getRightsIdentifierScheme() {
         return rightsIdentifierScheme;
     }
 
+    @JsonProperty("rightsIdentifierScheme")
     public void setRightsIdentifierScheme(String rightsIdentifierScheme) {
         this.rightsIdentifierScheme = rightsIdentifierScheme;
     }
 
+    @JsonProperty("schemeURI")
     public URI getSchemeURI() {
         return schemeURI;
     }
 
+    @JsonProperty("schemeURI")
     public void setSchemeURI(URI schemeURI) {
         this.schemeURI = schemeURI;
     }
 
+    @JsonProperty("lang")
     public String getLang() {
         return lang;
     }
 
+    @JsonProperty("lang")
     public void setLang(String lang) {
         this.lang = lang;
+    }
+
+    @JsonAnyGetter
+    public Map<String, Object> getAdditionalProperties() {
+        return this.additionalProperties;
+    }
+
+    @JsonAnySetter
+    public void setAdditionalProperty(String name, Object value) {
+        this.additionalProperties.put(name, value);
     }
 
     @Override
@@ -104,6 +137,10 @@ public class Rights {
         sb.append('=');
         sb.append(((this.lang == null)?"<null>":this.lang));
         sb.append(',');
+        sb.append("additionalProperties");
+        sb.append('=');
+        sb.append(((this.additionalProperties == null)?"<null>":this.additionalProperties));
+        sb.append(',');
         if (sb.charAt((sb.length()- 1)) == ',') {
             sb.setCharAt((sb.length()- 1), ']');
         } else {
@@ -119,6 +156,7 @@ public class Rights {
         result = ((result* 31)+((this.rightsURI == null)? 0 :this.rightsURI.hashCode()));
         result = ((result* 31)+((this.schemeURI == null)? 0 :this.schemeURI.hashCode()));
         result = ((result* 31)+((this.rights == null)? 0 :this.rights.hashCode()));
+        result = ((result* 31)+((this.additionalProperties == null)? 0 :this.additionalProperties.hashCode()));
         result = ((result* 31)+((this.lang == null)? 0 :this.lang.hashCode()));
         result = ((result* 31)+((this.rightsIdentifier == null)? 0 :this.rightsIdentifier.hashCode()));
         return result;
@@ -133,7 +171,7 @@ public class Rights {
             return false;
         }
         Rights rhs = ((Rights) other);
-        return (((((((this.rightsIdentifierScheme == rhs.rightsIdentifierScheme)||((this.rightsIdentifierScheme!= null)&&this.rightsIdentifierScheme.equals(rhs.rightsIdentifierScheme)))&&((this.rightsURI == rhs.rightsURI)||((this.rightsURI!= null)&&this.rightsURI.equals(rhs.rightsURI))))&&((this.schemeURI == rhs.schemeURI)||((this.schemeURI!= null)&&this.schemeURI.equals(rhs.schemeURI))))&&((this.rights == rhs.rights)||((this.rights!= null)&&this.rights.equals(rhs.rights))))&&((this.lang == rhs.lang)||((this.lang!= null)&&this.lang.equals(rhs.lang))))&&((this.rightsIdentifier == rhs.rightsIdentifier)||((this.rightsIdentifier!= null)&&this.rightsIdentifier.equals(rhs.rightsIdentifier))));
+        return ((((((((this.rightsIdentifierScheme == rhs.rightsIdentifierScheme)||((this.rightsIdentifierScheme!= null)&&this.rightsIdentifierScheme.equals(rhs.rightsIdentifierScheme)))&&((this.rightsURI == rhs.rightsURI)||((this.rightsURI!= null)&&this.rightsURI.equals(rhs.rightsURI))))&&((this.schemeURI == rhs.schemeURI)||((this.schemeURI!= null)&&this.schemeURI.equals(rhs.schemeURI))))&&((this.rights == rhs.rights)||((this.rights!= null)&&this.rights.equals(rhs.rights))))&&((this.additionalProperties == rhs.additionalProperties)||((this.additionalProperties!= null)&&this.additionalProperties.equals(rhs.additionalProperties))))&&((this.lang == rhs.lang)||((this.lang!= null)&&this.lang.equals(rhs.lang))))&&((this.rightsIdentifier == rhs.rightsIdentifier)||((this.rightsIdentifier!= null)&&this.rightsIdentifier.equals(rhs.rightsIdentifier))));
     }
 
 }

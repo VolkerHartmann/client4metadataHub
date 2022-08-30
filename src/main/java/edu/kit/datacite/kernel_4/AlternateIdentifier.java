@@ -1,10 +1,21 @@
 
 package edu.kit.datacite.kernel_4;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.annotation.processing.Generated;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({
+    "alternateIdentifier",
+    "alternateIdentifierType"
+})
 @Generated("jsonschema2pojo")
 public class AlternateIdentifier {
 
@@ -13,23 +24,24 @@ public class AlternateIdentifier {
      * (Required)
      * 
      */
-    @SerializedName("alternateIdentifier")
-    @Expose
+    @JsonProperty("alternateIdentifier")
     private String alternateIdentifier;
     /**
      * 
      * (Required)
      * 
      */
-    @SerializedName("alternateIdentifierType")
-    @Expose
+    @JsonProperty("alternateIdentifierType")
     private String alternateIdentifierType;
+    @JsonIgnore
+    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      * 
      * (Required)
      * 
      */
+    @JsonProperty("alternateIdentifier")
     public String getAlternateIdentifier() {
         return alternateIdentifier;
     }
@@ -39,6 +51,7 @@ public class AlternateIdentifier {
      * (Required)
      * 
      */
+    @JsonProperty("alternateIdentifier")
     public void setAlternateIdentifier(String alternateIdentifier) {
         this.alternateIdentifier = alternateIdentifier;
     }
@@ -48,6 +61,7 @@ public class AlternateIdentifier {
      * (Required)
      * 
      */
+    @JsonProperty("alternateIdentifierType")
     public String getAlternateIdentifierType() {
         return alternateIdentifierType;
     }
@@ -57,8 +71,19 @@ public class AlternateIdentifier {
      * (Required)
      * 
      */
+    @JsonProperty("alternateIdentifierType")
     public void setAlternateIdentifierType(String alternateIdentifierType) {
         this.alternateIdentifierType = alternateIdentifierType;
+    }
+
+    @JsonAnyGetter
+    public Map<String, Object> getAdditionalProperties() {
+        return this.additionalProperties;
+    }
+
+    @JsonAnySetter
+    public void setAdditionalProperty(String name, Object value) {
+        this.additionalProperties.put(name, value);
     }
 
     @Override
@@ -73,6 +98,10 @@ public class AlternateIdentifier {
         sb.append('=');
         sb.append(((this.alternateIdentifierType == null)?"<null>":this.alternateIdentifierType));
         sb.append(',');
+        sb.append("additionalProperties");
+        sb.append('=');
+        sb.append(((this.additionalProperties == null)?"<null>":this.additionalProperties));
+        sb.append(',');
         if (sb.charAt((sb.length()- 1)) == ',') {
             sb.setCharAt((sb.length()- 1), ']');
         } else {
@@ -85,6 +114,7 @@ public class AlternateIdentifier {
     public int hashCode() {
         int result = 1;
         result = ((result* 31)+((this.alternateIdentifier == null)? 0 :this.alternateIdentifier.hashCode()));
+        result = ((result* 31)+((this.additionalProperties == null)? 0 :this.additionalProperties.hashCode()));
         result = ((result* 31)+((this.alternateIdentifierType == null)? 0 :this.alternateIdentifierType.hashCode()));
         return result;
     }
@@ -98,7 +128,7 @@ public class AlternateIdentifier {
             return false;
         }
         AlternateIdentifier rhs = ((AlternateIdentifier) other);
-        return (((this.alternateIdentifier == rhs.alternateIdentifier)||((this.alternateIdentifier!= null)&&this.alternateIdentifier.equals(rhs.alternateIdentifier)))&&((this.alternateIdentifierType == rhs.alternateIdentifierType)||((this.alternateIdentifierType!= null)&&this.alternateIdentifierType.equals(rhs.alternateIdentifierType))));
+        return ((((this.alternateIdentifier == rhs.alternateIdentifier)||((this.alternateIdentifier!= null)&&this.alternateIdentifier.equals(rhs.alternateIdentifier)))&&((this.additionalProperties == rhs.additionalProperties)||((this.additionalProperties!= null)&&this.additionalProperties.equals(rhs.additionalProperties))))&&((this.alternateIdentifierType == rhs.alternateIdentifierType)||((this.alternateIdentifierType!= null)&&this.alternateIdentifierType.equals(rhs.alternateIdentifierType))));
     }
 
 }

@@ -1,10 +1,21 @@
 
 package edu.kit.datacite.kernel_4;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.annotation.processing.Generated;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({
+    "identifier",
+    "identifierType"
+})
 @Generated("jsonschema2pojo")
 public class Identifier {
 
@@ -13,23 +24,24 @@ public class Identifier {
      * (Required)
      * 
      */
-    @SerializedName("identifier")
-    @Expose
+    @JsonProperty("identifier")
     private String identifier;
     /**
      * 
      * (Required)
      * 
      */
-    @SerializedName("identifierType")
-    @Expose
+    @JsonProperty("identifierType")
     private String identifierType;
+    @JsonIgnore
+    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      * 
      * (Required)
      * 
      */
+    @JsonProperty("identifier")
     public String getIdentifier() {
         return identifier;
     }
@@ -39,6 +51,7 @@ public class Identifier {
      * (Required)
      * 
      */
+    @JsonProperty("identifier")
     public void setIdentifier(String identifier) {
         this.identifier = identifier;
     }
@@ -48,6 +61,7 @@ public class Identifier {
      * (Required)
      * 
      */
+    @JsonProperty("identifierType")
     public String getIdentifierType() {
         return identifierType;
     }
@@ -57,8 +71,19 @@ public class Identifier {
      * (Required)
      * 
      */
+    @JsonProperty("identifierType")
     public void setIdentifierType(String identifierType) {
         this.identifierType = identifierType;
+    }
+
+    @JsonAnyGetter
+    public Map<String, Object> getAdditionalProperties() {
+        return this.additionalProperties;
+    }
+
+    @JsonAnySetter
+    public void setAdditionalProperty(String name, Object value) {
+        this.additionalProperties.put(name, value);
     }
 
     @Override
@@ -73,6 +98,10 @@ public class Identifier {
         sb.append('=');
         sb.append(((this.identifierType == null)?"<null>":this.identifierType));
         sb.append(',');
+        sb.append("additionalProperties");
+        sb.append('=');
+        sb.append(((this.additionalProperties == null)?"<null>":this.additionalProperties));
+        sb.append(',');
         if (sb.charAt((sb.length()- 1)) == ',') {
             sb.setCharAt((sb.length()- 1), ']');
         } else {
@@ -86,6 +115,7 @@ public class Identifier {
         int result = 1;
         result = ((result* 31)+((this.identifier == null)? 0 :this.identifier.hashCode()));
         result = ((result* 31)+((this.identifierType == null)? 0 :this.identifierType.hashCode()));
+        result = ((result* 31)+((this.additionalProperties == null)? 0 :this.additionalProperties.hashCode()));
         return result;
     }
 
@@ -98,7 +128,7 @@ public class Identifier {
             return false;
         }
         Identifier rhs = ((Identifier) other);
-        return (((this.identifier == rhs.identifier)||((this.identifier!= null)&&this.identifier.equals(rhs.identifier)))&&((this.identifierType == rhs.identifierType)||((this.identifierType!= null)&&this.identifierType.equals(rhs.identifierType))));
+        return ((((this.identifier == rhs.identifier)||((this.identifier!= null)&&this.identifier.equals(rhs.identifier)))&&((this.identifierType == rhs.identifierType)||((this.identifierType!= null)&&this.identifierType.equals(rhs.identifierType))))&&((this.additionalProperties == rhs.additionalProperties)||((this.additionalProperties!= null)&&this.additionalProperties.equals(rhs.additionalProperties))));
     }
 
 }

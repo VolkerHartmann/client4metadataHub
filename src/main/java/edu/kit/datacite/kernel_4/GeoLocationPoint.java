@@ -1,10 +1,21 @@
 
 package edu.kit.datacite.kernel_4;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.annotation.processing.Generated;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({
+    "pointLongitude",
+    "pointLatitude"
+})
 @Generated("jsonschema2pojo")
 public class GeoLocationPoint {
 
@@ -13,23 +24,24 @@ public class GeoLocationPoint {
      * (Required)
      * 
      */
-    @SerializedName("pointLongitude")
-    @Expose
+    @JsonProperty("pointLongitude")
     private Double pointLongitude;
     /**
      * 
      * (Required)
      * 
      */
-    @SerializedName("pointLatitude")
-    @Expose
+    @JsonProperty("pointLatitude")
     private Double pointLatitude;
+    @JsonIgnore
+    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      * 
      * (Required)
      * 
      */
+    @JsonProperty("pointLongitude")
     public Double getPointLongitude() {
         return pointLongitude;
     }
@@ -39,6 +51,7 @@ public class GeoLocationPoint {
      * (Required)
      * 
      */
+    @JsonProperty("pointLongitude")
     public void setPointLongitude(Double pointLongitude) {
         this.pointLongitude = pointLongitude;
     }
@@ -48,6 +61,7 @@ public class GeoLocationPoint {
      * (Required)
      * 
      */
+    @JsonProperty("pointLatitude")
     public Double getPointLatitude() {
         return pointLatitude;
     }
@@ -57,8 +71,19 @@ public class GeoLocationPoint {
      * (Required)
      * 
      */
+    @JsonProperty("pointLatitude")
     public void setPointLatitude(Double pointLatitude) {
         this.pointLatitude = pointLatitude;
+    }
+
+    @JsonAnyGetter
+    public Map<String, Object> getAdditionalProperties() {
+        return this.additionalProperties;
+    }
+
+    @JsonAnySetter
+    public void setAdditionalProperty(String name, Object value) {
+        this.additionalProperties.put(name, value);
     }
 
     @Override
@@ -73,6 +98,10 @@ public class GeoLocationPoint {
         sb.append('=');
         sb.append(((this.pointLatitude == null)?"<null>":this.pointLatitude));
         sb.append(',');
+        sb.append("additionalProperties");
+        sb.append('=');
+        sb.append(((this.additionalProperties == null)?"<null>":this.additionalProperties));
+        sb.append(',');
         if (sb.charAt((sb.length()- 1)) == ',') {
             sb.setCharAt((sb.length()- 1), ']');
         } else {
@@ -84,8 +113,9 @@ public class GeoLocationPoint {
     @Override
     public int hashCode() {
         int result = 1;
-        result = ((result* 31)+((this.pointLongitude == null)? 0 :this.pointLongitude.hashCode()));
         result = ((result* 31)+((this.pointLatitude == null)? 0 :this.pointLatitude.hashCode()));
+        result = ((result* 31)+((this.additionalProperties == null)? 0 :this.additionalProperties.hashCode()));
+        result = ((result* 31)+((this.pointLongitude == null)? 0 :this.pointLongitude.hashCode()));
         return result;
     }
 
@@ -98,7 +128,7 @@ public class GeoLocationPoint {
             return false;
         }
         GeoLocationPoint rhs = ((GeoLocationPoint) other);
-        return (((this.pointLongitude == rhs.pointLongitude)||((this.pointLongitude!= null)&&this.pointLongitude.equals(rhs.pointLongitude)))&&((this.pointLatitude == rhs.pointLatitude)||((this.pointLatitude!= null)&&this.pointLatitude.equals(rhs.pointLatitude))));
+        return ((((this.pointLatitude == rhs.pointLatitude)||((this.pointLatitude!= null)&&this.pointLatitude.equals(rhs.pointLatitude)))&&((this.additionalProperties == rhs.additionalProperties)||((this.additionalProperties!= null)&&this.additionalProperties.equals(rhs.additionalProperties))))&&((this.pointLongitude == rhs.pointLongitude)||((this.pointLongitude!= null)&&this.pointLongitude.equals(rhs.pointLongitude))));
     }
 
 }

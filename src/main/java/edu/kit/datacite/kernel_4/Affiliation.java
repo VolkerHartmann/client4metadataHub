@@ -1,10 +1,20 @@
 
 package edu.kit.datacite.kernel_4;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.annotation.processing.Generated;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({
+    "affiliation"
+})
 @Generated("jsonschema2pojo")
 public class Affiliation {
 
@@ -13,15 +23,17 @@ public class Affiliation {
      * (Required)
      * 
      */
-    @SerializedName("affiliation")
-    @Expose
+    @JsonProperty("affiliation")
     private String affiliation;
+    @JsonIgnore
+    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      * 
      * (Required)
      * 
      */
+    @JsonProperty("affiliation")
     public String getAffiliation() {
         return affiliation;
     }
@@ -31,8 +43,19 @@ public class Affiliation {
      * (Required)
      * 
      */
+    @JsonProperty("affiliation")
     public void setAffiliation(String affiliation) {
         this.affiliation = affiliation;
+    }
+
+    @JsonAnyGetter
+    public Map<String, Object> getAdditionalProperties() {
+        return this.additionalProperties;
+    }
+
+    @JsonAnySetter
+    public void setAdditionalProperty(String name, Object value) {
+        this.additionalProperties.put(name, value);
     }
 
     @Override
@@ -42,6 +65,10 @@ public class Affiliation {
         sb.append("affiliation");
         sb.append('=');
         sb.append(((this.affiliation == null)?"<null>":this.affiliation));
+        sb.append(',');
+        sb.append("additionalProperties");
+        sb.append('=');
+        sb.append(((this.additionalProperties == null)?"<null>":this.additionalProperties));
         sb.append(',');
         if (sb.charAt((sb.length()- 1)) == ',') {
             sb.setCharAt((sb.length()- 1), ']');
@@ -55,6 +82,7 @@ public class Affiliation {
     public int hashCode() {
         int result = 1;
         result = ((result* 31)+((this.affiliation == null)? 0 :this.affiliation.hashCode()));
+        result = ((result* 31)+((this.additionalProperties == null)? 0 :this.additionalProperties.hashCode()));
         return result;
     }
 
@@ -67,7 +95,7 @@ public class Affiliation {
             return false;
         }
         Affiliation rhs = ((Affiliation) other);
-        return ((this.affiliation == rhs.affiliation)||((this.affiliation!= null)&&this.affiliation.equals(rhs.affiliation)));
+        return (((this.affiliation == rhs.affiliation)||((this.affiliation!= null)&&this.affiliation.equals(rhs.affiliation)))&&((this.additionalProperties == rhs.additionalProperties)||((this.additionalProperties!= null)&&this.additionalProperties.equals(rhs.additionalProperties))));
     }
 
 }
