@@ -91,6 +91,14 @@ Edit 'src/main/java/edu/kit/turntable/doipclient/Main.java' due to your needs.
 "serviceId": "35.TEST/DOIPServer",
 
 ```
+## Start MetadataHub
+```
+user@localhost:/home/user/client4metadataHub/$./gradlew bootRun
+```
+
+## REST API 
+The REST API is now available in browser:
+http://localhost:8099/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config
 
 ### Run Test Client for MetadataHub
 To start the server just type:

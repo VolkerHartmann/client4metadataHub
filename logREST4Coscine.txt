@@ -1,0 +1,356 @@
+
+> Configure project :
+Building 'Client4metadataHub' version: unspecified
+Running gradle version: 7.4
+JDK version: 11
+
+> Task :compileJava
+> Task :processResources UP-TO-DATE
+> Task :classes
+
+> Task :run
+Test the REST!!!
+Reading token from /home/hartmann-v/Schreibtisch/token.txt
+********************************************************************
+***Skip tests for metastore_Schema_ID
+********************************************************************
+********************************************************************
+***End of test for clientID: metastore_Schema_ID
+********************************************************************
+********************************************************************
+***HELLO coscine_Schema_ID
+********************************************************************
+********************************************************************
+***Retrieve metadata element!
+********************************************************************
+********************************************************************
+***Retrieve schema element!
+********************************************************************
+**************************************
+****REST4DOIP*************************
+**************************************
+Operation ID: OP_RETRIEVE
+JSON4DOIP   :
+{
+  "clientId": "coscine_Schema_ID",
+  "targetId": "https://purl.org/coscine/ap/radar/",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbklkIjoiYWYzNmY5M2YtNWYxMy00ZDY1LWI1NDItNTFhMjNhYmU2MmNjIiwiaXNzIjoiaHR0cHM6Ly9jb3NjaW5lLnJ3dGgtYWFjaGVuLmRlIiwiYXVkIjoiaHR0cHM6Ly9jb3NjaW5lLnJ3dGgtYWFjaGVuLmRlIiwiaWF0IjoxNjYxNzcwMTgwLCJleHAiOjE2NjI0MjIzOTl9.aJiCwhIE73IJ1VGe3ZEz3-d0Pls99Z5eiyVeEC60eJA",
+  "datacite": {
+    "identifiers": [],
+    "creators": [],
+    "titles": [],
+    "subjects": [],
+    "contributors": [],
+    "dates": [],
+    "alternateIdentifiers": [],
+    "relatedIdentifiers": [],
+    "sizes": [],
+    "formats": [],
+    "rightsList": [],
+    "descriptions": [],
+    "geoLocations": [],
+    "fundingReferences": [],
+    "additionalProperties": {}
+  },
+  "attributes": [],
+  "elements": [
+    {
+      "id": "schema",
+      "value": "Any value"
+    }
+  ],
+  "header": []
+}
+**************************************
+**************************************
+**************************************
+14:14:08.552 [main] WARN edu.kit.rest.util.SimpleServiceClient - Calling createResource(#DataResource).
+14:14:08.556 [main] WARN edu.kit.rest.util.SimpleServiceClient - Sending POST request for resource.
+14:14:08.564 [main] DEBUG org.springframework.web.client.RestTemplate - HTTP POST http://localhost:8099/doip?operationId=OP_RETRIEVE
+14:14:08.612 [main] DEBUG org.springframework.web.client.RestTemplate - Accept=[application/json, application/*+json]
+14:14:08.617 [main] DEBUG org.springframework.web.client.RestTemplate - Writing [edu.kit.metadatahub.doip.rest.RestDoip@1a6d8329[id=<null>,datacite=edu.kit.datacite.kernel_4.Datacite43Schema@1a942c18[types=<null>,identifiers=[],creators=[],titles=[],publisher=<null>,publicationYear=<null>,subjects=[],contributors=[],dates=[],language=<null>,alternateIdentifiers=[],relatedIdentifiers=[],sizes=[],formats=[],version=<null>,rightsList=[],descriptions=[],geoLocations=[],fundingReferences=[],schemaVersion=<null>,additionalProperties={}],attributes=[],elements=[edu.kit.metadatahub.doip.rest.Content@55a147cc[id=schema,type=<null>,value=Any value]],header=[]]] with org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
+14:14:09.013 [main] DEBUG org.springframework.web.client.RestTemplate - Response 200 OK
+14:14:09.017 [main] DEBUG org.springframework.web.client.RestTemplate - Reading to [edu.kit.metadatahub.doip.rest.RestDoip]
+14:14:09.025 [main] WARN edu.kit.rest.util.SimpleServiceClient - Request returned with status 200. Returning response body.
+14:14:09.029 [main] WARN edu.kit.rest.util.SimpleServiceClient - HTTP header: Content-Type -> [application/json]
+14:14:09.029 [main] WARN edu.kit.rest.util.SimpleServiceClient - HTTP header: Content-Length -> [6791]
+14:14:09.029 [main] WARN edu.kit.rest.util.SimpleServiceClient - HTTP header: Date -> [Tue, 30 Aug 2022 12:14:09 GMT]
+14:14:09.029 [main] WARN edu.kit.rest.util.SimpleServiceClient - HTTP header: Keep-Alive -> [timeout=60]
+14:14:09.029 [main] WARN edu.kit.rest.util.SimpleServiceClient - HTTP header: Connection -> [keep-alive]
+RESULT via REST!
+{
+  "id": "https://purl.org/coscine/ap/radar/",
+  "datacite": {
+    "identifiers": [],
+    "creators": [],
+    "titles": [],
+    "subjects": [],
+    "contributors": [],
+    "dates": [],
+    "alternateIdentifiers": [],
+    "relatedIdentifiers": [],
+    "sizes": [],
+    "formats": [],
+    "rightsList": [],
+    "descriptions": [],
+    "geoLocations": [],
+    "fundingReferences": [],
+    "additionalProperties": {
+      "additionalProperties": {}
+    }
+  },
+  "attributes": [],
+  "elements": [
+    {
+      "id": "schema",
+      "value": "[{\"@id\":\"https://purl.org/coscine/ap/radar/\",\"@graph\":[{\"@id\":\"https://purl.org/coscine/ap/radar#subject\",\"http://www.w3.org/ns/shacl#path\":[{\"@id\":\"http://purl.org/dc/terms/subject\"}],\"http://www.w3.org/ns/shacl#order\":[{\"@value\":\"3\",\"@type\":\"http://www.w3.org/2001/XMLSchema#integer\"}],\"http://www.w3.org/ns/shacl#maxCount\":[{\"@value\":\"1\",\"@type\":\"http://www.w3.org/2001/XMLSchema#integer\"}],\"http://www.w3.org/ns/shacl#class\":[{\"@id\":\"http://www.dfg.de/dfg_profil/gremien/fachkollegien/faecher/\"}],\"http://www.w3.org/ns/shacl#name\":[{\"@language\":\"de\",\"@value\":\"Fachrichtung\"},{\"@language\":\"en\",\"@value\":\"Subject Area\"}]},{\"@id\":\"https://purl.org/coscine/ap/radar#created\",\"http://www.w3.org/ns/shacl#path\":[{\"@id\":\"http://purl.org/dc/terms/created\"}],\"http://www.w3.org/ns/shacl#order\":[{\"@value\":\"2\",\"@type\":\"http://www.w3.org/2001/XMLSchema#integer\"}],\"http://www.w3.org/ns/shacl#minCount\":[{\"@value\":\"1\",\"@type\":\"http://www.w3.org/2001/XMLSchema#integer\"}],\"http://www.w3.org/ns/shacl#maxCount\":[{\"@value\":\"1\",\"@type\":\"http://www.w3.org/2001/XMLSchema#integer\"}],\"http://www.w3.org/ns/shacl#name\":[{\"@language\":\"en\",\"@value\":\"Production Date\"},{\"@language\":\"de\",\"@value\":\"Erstelldatum\"}],\"http://www.w3.org/ns/shacl#datatype\":[{\"@id\":\"http://www.w3.org/2001/XMLSchema#date\"}],\"http://www.w3.org/ns/shacl#defaultValue\":[{\"@value\":\"{TODAY}\"}]},{\"@id\":\"https://purl.org/coscine/ap/radar#creator\",\"http://www.w3.org/ns/shacl#path\":[{\"@id\":\"http://purl.org/dc/terms/creator\"}],\"http://www.w3.org/ns/shacl#order\":[{\"@value\":\"0\",\"@type\":\"http://www.w3.org/2001/XMLSchema#integer\"}],\"http://www.w3.org/ns/shacl#minCount\":[{\"@value\":\"1\",\"@type\":\"http://www.w3.org/2001/XMLSchema#integer\"}],\"http://www.w3.org/ns/shacl#maxCount\":[{\"@value\":\"1\",\"@type\":\"http://www.w3.org/2001/XMLSchema#integer\"}],\"http://www.w3.org/ns/shacl#name\":[{\"@language\":\"de\",\"@value\":\"Ersteller\"},{\"@language\":\"en\",\"@value\":\"Creator\"}],\"http://www.w3.org/ns/shacl#minLength\":[{\"@value\":\"1\",\"@type\":\"http://www.w3.org/2001/XMLSchema#integer\"}],\"http://www.w3.org/ns/shacl#datatype\":[{\"@id\":\"http://www.w3.org/2001/XMLSchema#string\"}],\"http://www.w3.org/ns/shacl#defaultValue\":[{\"@value\":\"{ME}\"}]},{\"@id\":\"https://purl.org/coscine/ap/radar#rights\",\"http://www.w3.org/ns/shacl#path\":[{\"@id\":\"http://purl.org/dc/terms/rights\"}],\"http://www.w3.org/ns/shacl#order\":[{\"@value\":\"5\",\"@type\":\"http://www.w3.org/2001/XMLSchema#integer\"}],\"http://www.w3.org/ns/shacl#maxCount\":[{\"@value\":\"1\",\"@type\":\"http://www.w3.org/2001/XMLSchema#integer\"}],\"http://www.w3.org/ns/shacl#name\":[{\"@language\":\"en\",\"@value\":\"Rights\"},{\"@language\":\"de\",\"@value\":\"Berechtigung\"}],\"http://www.w3.org/ns/shacl#datatype\":[{\"@id\":\"http://www.w3.org/2001/XMLSchema#string\"}]},{\"@id\":\"https://purl.org/coscine/ap/radar#rightsHolder\",\"http://www.w3.org/ns/shacl#path\":[{\"@id\":\"http://purl.org/dc/terms/rightsHolder\"}],\"http://www.w3.org/ns/shacl#order\":[{\"@value\":\"6\",\"@type\":\"http://www.w3.org/2001/XMLSchema#integer\"}],\"http://www.w3.org/ns/shacl#maxCount\":[{\"@value\":\"1\",\"@type\":\"http://www.w3.org/2001/XMLSchema#integer\"}],\"http://www.w3.org/ns/shacl#name\":[{\"@language\":\"en\",\"@value\":\"Rightsholder\"},{\"@language\":\"de\",\"@value\":\"Rechteinhaber\"}],\"http://www.w3.org/ns/shacl#datatype\":[{\"@id\":\"http://www.w3.org/2001/XMLSchema#string\"}]},{\"@id\":\"https://purl.org/coscine/ap/radar#title\",\"http://www.w3.org/ns/shacl#path\":[{\"@id\":\"http://purl.org/dc/terms/title\"}],\"http://www.w3.org/ns/shacl#order\":[{\"@value\":\"1\",\"@type\":\"http://www.w3.org/2001/XMLSchema#integer\"}],\"http://www.w3.org/ns/shacl#minCount\":[{\"@value\":\"1\",\"@type\":\"http://www.w3.org/2001/XMLSchema#integer\"}],\"http://www.w3.org/ns/shacl#maxCount\":[{\"@value\":\"1\",\"@type\":\"http://www.w3.org/2001/XMLSchema#integer\"}],\"http://www.w3.org/ns/shacl#name\":[{\"@language\":\"de\",\"@value\":\"Titel\"},{\"@language\":\"en\",\"@value\":\"Title\"}],\"http://www.w3.org/ns/shacl#minLength\":[{\"@value\":\"1\",\"@type\":\"http://www.w3.org/2001/XMLSchema#integer\"}],\"http://www.w3.org/ns/shacl#datatype\":[{\"@id\":\"http://www.w3.org/2001/XMLSchema#string\"}]},{\"@id\":\"https://purl.org/coscine/ap/radar#type\",\"http://www.w3.org/ns/shacl#path\":[{\"@id\":\"http://purl.org/dc/terms/type\"}],\"http://www.w3.org/ns/shacl#order\":[{\"@value\":\"4\",\"@type\":\"http://www.w3.org/2001/XMLSchema#integer\"}],\"http://www.w3.org/ns/shacl#maxCount\":[{\"@value\":\"1\",\"@type\":\"http://www.w3.org/2001/XMLSchema#integer\"}],\"http://www.w3.org/ns/shacl#class\":[{\"@id\":\"http://purl.org/dc/dcmitype/\"}],\"http://www.w3.org/ns/shacl#name\":[{\"@language\":\"en\",\"@value\":\"Resource\"},{\"@language\":\"de\",\"@value\":\"Ressource\"}]},{\"@id\":\"https://purl.org/coscine/ap/radar/\",\"@type\":[\"http://www.w3.org/ns/shacl#NodeShape\"],\"http://purl.org/dc/terms/license\":[{\"@id\":\"http://spdx.org/licenses/MIT\"}],\"http://purl.org/dc/terms/rights\":[{\"@value\":\"Copyright © 2020 IT Center, RWTH Aachen University\"}],\"http://www.w3.org/ns/shacl#targetClass\":[{\"@id\":\"https://purl.org/coscine/ap/radar/\"}],\"http://www.w3.org/ns/shacl#closed\":[{\"@value\":\"true\",\"@type\":\"http://www.w3.org/2001/XMLSchema#boolean\"}],\"http://www.w3.org/ns/shacl#property\":[{\"@id\":\"https://purl.org/coscine/ap/radar#creator\"},{\"@id\":\"https://purl.org/coscine/ap/radar#rights\"},{\"@id\":\"https://purl.org/coscine/ap/radar#subject\"},{\"@id\":\"https://purl.org/coscine/ap/radar#created\"},{\"@id\":\"_:b6576279\"},{\"@id\":\"https://purl.org/coscine/ap/radar#type\"},{\"@id\":\"https://purl.org/coscine/ap/radar#rightsHolder\"},{\"@id\":\"https://purl.org/coscine/ap/radar#title\"}],\"http://purl.org/dc/terms/title\":[{\"@language\":\"en\",\"@value\":\"radar application profile\"}],\"http://purl.org/dc/terms/publisher\":[{\"@id\":\"https://itc.rwth-aachen.de/\"}]},{\"@id\":\"_:b6576279\",\"http://www.w3.org/ns/shacl#path\":[{\"@id\":\"http://www.w3.org/1999/02/22-rdf-syntax-ns#type\"}]}]}]"
+    }
+  ],
+  "header": []
+}
+********************************************************************
+***Skip update digital object
+********************************************************************
+********************************************************************
+***End of test for clientID: coscine_Schema_ID
+********************************************************************
+********************************************************************
+***Skip tests for metastore_metadata_ID
+********************************************************************
+********************************************************************
+***HELLO coscine_Metadata_ID
+********************************************************************
+**************************************
+****REST4DOIP*************************
+**************************************
+Operation ID: OP_RETRIEVE
+JSON4DOIP   :
+{
+  "id": "21.11192/62b97a86-d3cf-4517-9b09-6a09cd9b476d#path\u003d/turntableRestTest.txt",
+  "clientId": "coscine_Metadata_ID",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbklkIjoiYWYzNmY5M2YtNWYxMy00ZDY1LWI1NDItNTFhMjNhYmU2MmNjIiwiaXNzIjoiaHR0cHM6Ly9jb3NjaW5lLnJ3dGgtYWFjaGVuLmRlIiwiYXVkIjoiaHR0cHM6Ly9jb3NjaW5lLnJ3dGgtYWFjaGVuLmRlIiwiaWF0IjoxNjYxNzcwMTgwLCJleHAiOjE2NjI0MjIzOTl9.aJiCwhIE73IJ1VGe3ZEz3-d0Pls99Z5eiyVeEC60eJA",
+  "datacite": {
+    "identifiers": [],
+    "creators": [],
+    "titles": [],
+    "subjects": [],
+    "contributors": [],
+    "dates": [],
+    "alternateIdentifiers": [],
+    "relatedIdentifiers": [],
+    "sizes": [],
+    "formats": [],
+    "rightsList": [],
+    "descriptions": [],
+    "geoLocations": [],
+    "fundingReferences": [],
+    "additionalProperties": {}
+  },
+  "attributes": [],
+  "elements": [],
+  "header": []
+}
+**************************************
+**************************************
+**************************************
+14:14:09.038 [main] WARN edu.kit.rest.util.SimpleServiceClient - Calling createResource(#DataResource).
+14:14:09.039 [main] WARN edu.kit.rest.util.SimpleServiceClient - Sending POST request for resource.
+14:14:09.039 [main] DEBUG org.springframework.web.client.RestTemplate - HTTP POST http://localhost:8099/doip?operationId=OP_RETRIEVE
+14:14:09.050 [main] DEBUG org.springframework.web.client.RestTemplate - Accept=[application/json, application/*+json]
+14:14:09.050 [main] DEBUG org.springframework.web.client.RestTemplate - Writing [edu.kit.metadatahub.doip.rest.RestDoip@478db956[id=21.11192/62b97a86-d3cf-4517-9b09-6a09cd9b476d#path=/turntableRestTest.txt,datacite=edu.kit.datacite.kernel_4.Datacite43Schema@6ca18a14[types=<null>,identifiers=[],creators=[],titles=[],publisher=<null>,publicationYear=<null>,subjects=[],contributors=[],dates=[],language=<null>,alternateIdentifiers=[],relatedIdentifiers=[],sizes=[],formats=[],version=<null>,rightsList=[],descriptions=[],geoLocations=[],fundingReferences=[],schemaVersion=<null>,additionalProperties={}],attributes=[],elements=[],header=[]]] with org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
+14:14:09.057 [main] DEBUG org.springframework.web.client.RestTemplate - Response 200 OK
+14:14:09.057 [main] DEBUG org.springframework.web.client.RestTemplate - Reading to [edu.kit.metadatahub.doip.rest.RestDoip]
+14:14:09.057 [main] WARN edu.kit.rest.util.SimpleServiceClient - Request returned with status 200. Returning response body.
+14:14:09.057 [main] WARN edu.kit.rest.util.SimpleServiceClient - HTTP header: Content-Type -> [application/json]
+14:14:09.057 [main] WARN edu.kit.rest.util.SimpleServiceClient - HTTP header: Content-Length -> [56]
+14:14:09.057 [main] WARN edu.kit.rest.util.SimpleServiceClient - HTTP header: Date -> [Tue, 30 Aug 2022 12:14:09 GMT]
+14:14:09.057 [main] WARN edu.kit.rest.util.SimpleServiceClient - HTTP header: Keep-Alive -> [timeout=60]
+14:14:09.057 [main] WARN edu.kit.rest.util.SimpleServiceClient - HTTP header: Connection -> [keep-alive]
+********************************************************************
+***Retrieve document element!
+********************************************************************
+**************************************
+****REST4DOIP*************************
+**************************************
+Operation ID: OP_RETRIEVE
+JSON4DOIP   :
+{
+  "id": "21.11192/62b97a86-d3cf-4517-9b09-6a09cd9b476d#path\u003d/turntableRestTest.txt",
+  "clientId": "coscine_Metadata_ID",
+  "targetId": "21.11192/62b97a86-d3cf-4517-9b09-6a09cd9b476d#path\u003d/turntableRestTest.txt",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbklkIjoiYWYzNmY5M2YtNWYxMy00ZDY1LWI1NDItNTFhMjNhYmU2MmNjIiwiaXNzIjoiaHR0cHM6Ly9jb3NjaW5lLnJ3dGgtYWFjaGVuLmRlIiwiYXVkIjoiaHR0cHM6Ly9jb3NjaW5lLnJ3dGgtYWFjaGVuLmRlIiwiaWF0IjoxNjYxNzcwMTgwLCJleHAiOjE2NjI0MjIzOTl9.aJiCwhIE73IJ1VGe3ZEz3-d0Pls99Z5eiyVeEC60eJA",
+  "datacite": {
+    "identifiers": [],
+    "creators": [],
+    "titles": [],
+    "subjects": [],
+    "contributors": [],
+    "dates": [],
+    "alternateIdentifiers": [],
+    "relatedIdentifiers": [],
+    "sizes": [],
+    "formats": [],
+    "rightsList": [],
+    "descriptions": [],
+    "geoLocations": [],
+    "fundingReferences": [],
+    "additionalProperties": {}
+  },
+  "attributes": [],
+  "elements": [
+    {
+      "id": "document",
+      "value": "Any value"
+    },
+    {
+      "id": "digitalObjectId",
+      "value": "21.11192/62b97a86-d3cf-4517-9b09-6a09cd9b476d#path\u003d/turntableRestTest.txt"
+    }
+  ],
+  "header": []
+}
+**************************************
+**************************************
+**************************************
+14:14:09.060 [main] WARN edu.kit.rest.util.SimpleServiceClient - Calling createResource(#DataResource).
+14:14:09.061 [main] WARN edu.kit.rest.util.SimpleServiceClient - Sending POST request for resource.
+14:14:09.061 [main] DEBUG org.springframework.web.client.RestTemplate - HTTP POST http://localhost:8099/doip?operationId=OP_RETRIEVE
+14:14:09.070 [main] DEBUG org.springframework.web.client.RestTemplate - Accept=[application/json, application/*+json]
+14:14:09.070 [main] DEBUG org.springframework.web.client.RestTemplate - Writing [edu.kit.metadatahub.doip.rest.RestDoip@478db956[id=21.11192/62b97a86-d3cf-4517-9b09-6a09cd9b476d#path=/turntableRestTest.txt,datacite=edu.kit.datacite.kernel_4.Datacite43Schema@6ca18a14[types=<null>,identifiers=[],creators=[],titles=[],publisher=<null>,publicationYear=<null>,subjects=[],contributors=[],dates=[],language=<null>,alternateIdentifiers=[],relatedIdentifiers=[],sizes=[],formats=[],version=<null>,rightsList=[],descriptions=[],geoLocations=[],fundingReferences=[],schemaVersion=<null>,additionalProperties={}],attributes=[],elements=[edu.kit.metadatahub.doip.rest.Content@57576994[id=document,type=<null>,value=Any value], edu.kit.metadatahub.doip.rest.Content@616ac46a[id=digitalObjectId,type=<null>,value=21.11192/62b97a86-d3cf-4517-9b09-6a09cd9b476d#path=/turntableRestTest.txt]],header=[]]] with org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
+14:14:09.395 [main] DEBUG org.springframework.web.client.RestTemplate - Response 200 OK
+14:14:09.395 [main] DEBUG org.springframework.web.client.RestTemplate - Reading to [edu.kit.metadatahub.doip.rest.RestDoip]
+14:14:09.396 [main] WARN edu.kit.rest.util.SimpleServiceClient - Request returned with status 200. Returning response body.
+14:14:09.396 [main] WARN edu.kit.rest.util.SimpleServiceClient - HTTP header: Content-Type -> [application/json]
+14:14:09.396 [main] WARN edu.kit.rest.util.SimpleServiceClient - HTTP header: Content-Length -> [1839]
+14:14:09.396 [main] WARN edu.kit.rest.util.SimpleServiceClient - HTTP header: Date -> [Tue, 30 Aug 2022 12:14:09 GMT]
+14:14:09.396 [main] WARN edu.kit.rest.util.SimpleServiceClient - HTTP header: Keep-Alive -> [timeout=60]
+14:14:09.396 [main] WARN edu.kit.rest.util.SimpleServiceClient - HTTP header: Connection -> [keep-alive]
+RESULT via REST!
+{
+  "id": "21.11192/62b97a86-d3cf-4517-9b09-6a09cd9b476d#path\u003d/turntableRestTest.txt",
+  "datacite": {
+    "identifiers": [],
+    "creators": [],
+    "titles": [],
+    "subjects": [],
+    "contributors": [],
+    "dates": [],
+    "alternateIdentifiers": [],
+    "relatedIdentifiers": [],
+    "sizes": [],
+    "formats": [],
+    "rightsList": [],
+    "descriptions": [],
+    "geoLocations": [],
+    "fundingReferences": [],
+    "additionalProperties": {
+      "additionalProperties": {}
+    }
+  },
+  "attributes": [],
+  "elements": [
+    {
+      "id": "document",
+      "value": "{\"data\":{\"metadataStorage\":[{\"https://hdl.handle.net/21.11102/62b97a86-d3cf-4517-9b09-6a09cd9b476d@path\u003d%2FturntableRestTest.txt\":{\"http://purl.org/dc/terms/created\":[{\"value\":\"2022-08-29\",\"datatype\":\"http://www.w3.org/2001/XMLSchema#date\",\"type\":\"literal\"}],\"http://purl.org/dc/terms/creator\":[{\"value\":\"Volker Hartmann\",\"datatype\":\"http://www.w3.org/2001/XMLSchema#string\",\"type\":\"literal\"}],\"http://purl.org/dc/terms/rights\":[{\"value\":\"No rights\",\"datatype\":\"http://www.w3.org/2001/XMLSchema#string\",\"type\":\"literal\"}],\"http://purl.org/dc/terms/rightsHolder\":[{\"value\":\"Me\",\"datatype\":\"http://www.w3.org/2001/XMLSchema#string\",\"type\":\"literal\"}],\"http://purl.org/dc/terms/subject\":[{\"value\":\"http://www.dfg.de/dfg_profil/gremien/fachkollegien/liste/index.jsp?id\u003d201#201-02\",\"type\":\"uri\"}],\"http://purl.org/dc/terms/title\":[{\"value\":\"Another test\",\"datatype\":\"http://www.w3.org/2001/XMLSchema#string\",\"type\":\"literal\"}],\"http://purl.org/dc/terms/type\":[{\"value\":\"http://purl.org/dc/dcmitype/Text\",\"type\":\"uri\"}],\"http://www.w3.org/1999/02/22-rdf-syntax-ns#type\":[{\"value\":\"https://purl.org/coscine/ap/radar/\",\"type\":\"uri\"}]}}],\"fileStorage\":[]}}"
+    }
+  ],
+  "header": []
+}
+********************************************************************
+***update digital object
+********************************************************************
+********************************************************************
+***Datacite: 
+{"identifiers":[],"creators":[],"titles":[{"title":"Final test update document_2022_08_30_14_14","titleType":"OTHER","additionalProperties":{}}],"publisher":"NFDI4Ing","subjects":[],"contributors":[],"dates":[],"alternateIdentifiers":[],"relatedIdentifiers":[],"sizes":[],"formats":[],"rightsList":[],"descriptions":[],"geoLocations":[],"fundingReferences":[],"additionalProperties":{}}
+********************************************************************
+**************************************
+****REST4DOIP*************************
+**************************************
+Operation ID: OP_UPDATE
+JSON4DOIP   :
+{
+  "clientId": "coscine_Metadata_ID",
+  "targetId": "21.11102/62b97a86-d3cf-4517-9b09-6a09cd9b476d#path\u003d/TestTheREST.txt",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbklkIjoiYWYzNmY5M2YtNWYxMy00ZDY1LWI1NDItNTFhMjNhYmU2MmNjIiwiaXNzIjoiaHR0cHM6Ly9jb3NjaW5lLnJ3dGgtYWFjaGVuLmRlIiwiYXVkIjoiaHR0cHM6Ly9jb3NjaW5lLnJ3dGgtYWFjaGVuLmRlIiwiaWF0IjoxNjYxNzcwMTgwLCJleHAiOjE2NjI0MjIzOTl9.aJiCwhIE73IJ1VGe3ZEz3-d0Pls99Z5eiyVeEC60eJA",
+  "datacite": {
+    "identifiers": [],
+    "creators": [],
+    "titles": [
+      {
+        "title": "Final test update document_2022_08_30_14_14",
+        "titleType": "OTHER",
+        "additionalProperties": {
+          "additionalProperties": {}
+        }
+      }
+    ],
+    "publisher": "NFDI4Ing",
+    "subjects": [],
+    "contributors": [],
+    "dates": [],
+    "alternateIdentifiers": [],
+    "relatedIdentifiers": [],
+    "sizes": [],
+    "formats": [],
+    "rightsList": [],
+    "descriptions": [],
+    "geoLocations": [],
+    "fundingReferences": [],
+    "additionalProperties": {
+      "additionalProperties": {}
+    }
+  },
+  "attributes": [],
+  "elements": [
+    {
+      "id": "document",
+      "type": "application/json",
+      "value": "{\n\"http://purl.org/dc/terms/creator\": [{\n\"value\": \"Final test for updating creator with docker\",\n\"type\": \"literal\",\n      \"datatype\": \"http://www.w3.org/2001/XMLSchema#string\"\n    }],\n  \"http://purl.org/dc/terms/title\": [{\n      \"value\": \"Final test update with dockerized turntable!\",\n      \"type\": \"literal\",\n      \"datatype\": \"http://www.w3.org/2001/XMLSchema#string\"\n    }],\n  \"http://purl.org/dc/terms/created\": [{\n      \"value\": \"2022-06-28\",\n      \"type\": \"literal\",\n      \"datatype\": \"http://www.w3.org/2001/XMLSchema#date\"\n    }]\n}"
+    }
+  ],
+  "header": []
+}
+**************************************
+**************************************
+**************************************
+14:14:09.414 [main] WARN edu.kit.rest.util.SimpleServiceClient - Calling createResource(#DataResource).
+14:14:09.414 [main] WARN edu.kit.rest.util.SimpleServiceClient - Sending POST request for resource.
+14:14:09.415 [main] DEBUG org.springframework.web.client.RestTemplate - HTTP POST http://localhost:8099/doip?operationId=OP_UPDATE
+14:14:09.421 [main] DEBUG org.springframework.web.client.RestTemplate - Accept=[application/json, application/*+json]
+14:14:09.422 [main] DEBUG org.springframework.web.client.RestTemplate - Writing [edu.kit.metadatahub.doip.rest.RestDoip@4c1f22f3[id=<null>,datacite=edu.kit.datacite.kernel_4.Datacite43Schema@598bd2ba[types=<null>,identifiers=[],creators=[],titles=[edu.kit.datacite.kernel_4.Title@5a755cc1[title=Final test update document_2022_08_30_14_14,titleType=Other,lang=<null>,additionalProperties={additionalProperties={}}]],publisher=NFDI4Ing,publicationYear=<null>,subjects=[],contributors=[],dates=[],language=<null>,alternateIdentifiers=[],relatedIdentifiers=[],sizes=[],formats=[],version=<null>,rightsList=[],descriptions=[],geoLocations=[],fundingReferences=[],schemaVersion=<null>,additionalProperties={additionalProperties={}}],attributes=[],elements=[edu.kit.metadatahub.doip.rest.Content@7ae42ce3[id=document,type=application/json,value={
+"http://purl.org/dc/terms/creator": [{
+"value": "Final test for updating creator with docker",
+"type": "literal",
+      "datatype": "http://www.w3.org/2001/XMLSchema#string"
+    }],
+  "http://purl.org/dc/terms/title": [{
+      "value": "Final test update with dockerized turntable!",
+      "type": "literal",
+      "datatype": "http://www.w3.org/2001/XMLSchema#string"
+    }],
+  "http://purl.org/dc/terms/created": [{
+      "value": "2022-06-28",
+      "type": "literal",
+      "datatype": "http://www.w3.org/2001/XMLSchema#date"
+    }]
+}]],header=[]]] with org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
+14:14:09.821 [main] DEBUG org.springframework.web.client.RestTemplate - Response 200 OK
+14:14:09.822 [main] DEBUG org.springframework.web.client.RestTemplate - Reading to [edu.kit.metadatahub.doip.rest.RestDoip]
+14:14:09.822 [main] WARN edu.kit.rest.util.SimpleServiceClient - Request returned with status 200. Returning response body.
+14:14:09.822 [main] WARN edu.kit.rest.util.SimpleServiceClient - HTTP header: Content-Type -> [application/json]
+14:14:09.822 [main] WARN edu.kit.rest.util.SimpleServiceClient - HTTP header: Content-Length -> [56]
+14:14:09.822 [main] WARN edu.kit.rest.util.SimpleServiceClient - HTTP header: Date -> [Tue, 30 Aug 2022 12:14:09 GMT]
+14:14:09.822 [main] WARN edu.kit.rest.util.SimpleServiceClient - HTTP header: Keep-Alive -> [timeout=60]
+14:14:09.822 [main] WARN edu.kit.rest.util.SimpleServiceClient - HTTP header: Connection -> [keep-alive]
+RESULT via REST!
+{
+  "attributes": [],
+  "elements": [],
+  "header": []
+}
+********************************************************************
+***End of test for clientID: coscine_Metadata_ID
+********************************************************************
+
+BUILD SUCCESSFUL in 2s
+3 actionable tasks: 2 executed, 1 up-to-date

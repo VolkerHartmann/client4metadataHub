@@ -244,7 +244,7 @@ public class Main4Rest {
     // String[] allClientIds = {"!metastore_Schema_ID", "!coscine_Schema_ID", "!metastore_metadata_ID", "coscine_Metadata_ID"};
     // to allow only coscine metadata server.
     /////////////////////////////////////////////////////////////////////////////
-    String[] allClientIds = {"!metastore_Schema_ID", "coscine_Schema_ID", "!metastore_metadata_ID", "!coscine_Metadata_ID"};
+    String[] allClientIds = {"!metastore_Schema_ID", "coscine_Schema_ID", "!metastore_metadata_ID", "coscine_Metadata_ID"};
     listOperations.add(DoipConstants.OP_CREATE);
     listOperations.add(DoipConstants.OP_RETRIEVE);
     listOperations.add(DoipConstants.OP_UPDATE);
@@ -407,7 +407,7 @@ public class Main4Rest {
 //        result = serveRest(restDoip, Operations.OP_RETRIEVE, id);
 //        printResult(result);
 
-        printHeader("Retrieve metadata and schema elements!");
+        printHeader("Retrieve schema element!");
         content = new Content();
         content.setId("schema");
         content.setValue("Any value");
@@ -466,6 +466,7 @@ public class Main4Rest {
 //    authInfo = null;
 
     if (!skip) {
+      printHeader("HELLO " + clientId);
 // Hello not available via REST
 //      result = client.hello(TARGET_ONE, authInfo, serviceInfo);
 //      printResult(result);
@@ -514,7 +515,7 @@ public class Main4Rest {
 
         printHeader("Retrieve metadata and schema elements!");
         content = new Content();
-        content.setId("schema");
+        content.setId("document");
         content.setValue("Any value");
         restDoip.getElements().add(content);
 
@@ -956,7 +957,8 @@ public class Main4Rest {
 
   private static void printResult(RestDoip result) throws IOException {
     System.out.println("RESULT via REST!");
-    System.out.println(new Gson().toJson(result));
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    System.out.println(gson.toJson(result));
   }
 
   private static void printResult(InputStream inputStream) throws IOException {
