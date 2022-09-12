@@ -9,6 +9,7 @@ For simplification no token is used in this example.
 ### Create Digital Object
 Operation ID: OP_CREATE
 Body   :
+```
 {
   "clientId": "metastore_Schema_ID",
   "token": "noToken",
@@ -51,8 +52,10 @@ Body   :
     }
   ],
   "header": []
-}
+}  
+```
 #### Return
+```
 {
   "id": "schema_2022_08_30_13_35",
   "datacite": {
@@ -123,6 +126,7 @@ Body   :
     }
   ]
 }
+```
 
 Remark: ETag is needed for updates.
 
@@ -130,6 +134,7 @@ Remark: ETag is needed for updates.
 ### Get Digital Object (metadata)
 Operation ID: OP_RETRIEVE
 Body   :
+```
 {
   "clientId": "metastore_Schema_ID",
   "targetId": "schema_2022_08_30_13_35",
@@ -160,7 +165,9 @@ Body   :
   ],
   "header": []
 }
+```
 #### Return
+```
 {
   "id": "schema_2022_08_30_13_35",
   "datacite": {
@@ -236,9 +243,11 @@ Body   :
     }
   ]
 }
+```
 ### Get Digital Object (metadata & schema)
 Operation ID: OP_RETRIEVE
 Body   :
+```
 {
   "clientId": "metastore_Schema_ID",
   "targetId": "schema_2022_08_30_13_35",
@@ -273,7 +282,9 @@ Body   :
   ],
   "header": []
 }
+```
 #### Return
+```
 {
   "id": "schema_2022_08_30_13_35",
   "datacite": {
@@ -353,9 +364,11 @@ Body   :
     }
   ]
 }
+```
 ### Update Digital Object
 Operation ID: OP_UPDATE
 Body   :
+```
 {
   "clientId": "metastore_Schema_ID",
   "targetId": "schema_2022_08_30_13_35",
@@ -405,8 +418,10 @@ Body   :
     }
   ]
 }
-
+```
+  
 #### Return
+```
 {
   "id": "schema_2022_08_30_13_35",
   "datacite": {
@@ -472,6 +487,7 @@ Body   :
   "elements": [],
   "header": []
 }
+```
 <summary>ClientId: metastore_Schema_ID</summary>
 </details>
 <details>
@@ -480,6 +496,7 @@ Body   :
 ### Create Digital Object
 Operation ID: OP_CREATE
 Body   :
+```
 {
   "clientId": "metastore_metadata_ID",
   "token": "noToken",
@@ -538,7 +555,9 @@ Body   :
   ],
   "header": []
 }
+```
 #### Return
+```
 {
   "id": "document_2022_08_30_13_35",
   "datacite": {
@@ -616,12 +635,14 @@ Body   :
     }
   ]
 }
+```
 
 Remark: ETag is needed for updates.
 
 ### Get Digital Object (metadata)
 Operation ID: OP_RETRIEVE
 Body   :
+```
 {
   "clientId": "metastore_metadata_ID",
   "targetId": "document_2022_08_30_13_35",
@@ -652,7 +673,9 @@ Body   :
   ],
   "header": []
 }
+```
 #### Return
+```
 {
   "id": "document_2022_08_30_13_35",
   "datacite": {
@@ -735,9 +758,11 @@ Body   :
     }
   ]
 }
+```
 ### Get Digital Object (metadata & document)
 Operation ID: OP_RETRIEVE
 Body   :
+```
 {
   "clientId": "metastore_metadata_ID",
   "targetId": "document_2022_08_30_13_35",
@@ -772,8 +797,10 @@ Body   :
   ],
   "header": []
 }
+```
 
 #### Return
+```
 {
   "id": "document_2022_08_30_13_35",
   "datacite": {
@@ -860,9 +887,11 @@ Body   :
     }
   ]
 }
+```
 ### Update Digital Object
 Operation ID: OP_UPDATE
 Body   :
+```
 {
   "clientId": "metastore_metadata_ID",
   "targetId": "document_2022_08_30_13_35",
@@ -927,7 +956,9 @@ Body   :
     }
   ]
 }
+```
 #### Return
+```
 {
   "id": "document_2022_08_30_13_35",
   "datacite": {
@@ -1000,6 +1031,7 @@ Body   :
   "elements": [],
   "header": []
 }
+```
 
 <summary>ClientId: metastore_metadata_ID</summary>
 </details>
@@ -1012,6 +1044,7 @@ NOT implemented yet!
 ### Get Digital Object (data)
 Operation ID: OP_RETRIEVE
 Body   :
+```
 {
   "clientId": "coscine_Schema_ID",
   "targetId": "https://purl.org/coscine/ap/radar/",
@@ -1042,7 +1075,9 @@ Body   :
   ],
   "header": []
 }
+```
 #### Return
+```
 {
   "id": "https://purl.org/coscine/ap/radar/",
   "datacite": {
@@ -1073,6 +1108,7 @@ Body   :
   ],
   "header": []
 }
+```
 
 <summary>ClientId: coscine_Schema_ID</summary>
 </details>
@@ -1082,6 +1118,7 @@ Body   :
 ### Create Digital Object
 Operation ID: OP_RETRIEVE
 Body   :
+```
 {
   "id": "21.11192/62b97a86-d3cf-4517-9b09-6a09cd9b476d#path\u003d/turntableRestTest.txt",
   "clientId": "coscine_Metadata_ID",
@@ -1107,12 +1144,14 @@ Body   :
   "elements": [],
   "header": []
 }
+```
 #### Return
 - - -
 
 ### Get Digital Object (data)
 Operation ID: OP_RETRIEVE
 Body   :
+```
 {
   "id": "21.11192/62b97a86-d3cf-4517-9b09-6a09cd9b476d#path\u003d/turntableRestTest.txt",
   "clientId": "coscine_Metadata_ID",
@@ -1148,7 +1187,9 @@ Body   :
   ],
   "header": []
 }
+```
 #### Return
+```
 {
   "id": "21.11192/62b97a86-d3cf-4517-9b09-6a09cd9b476d#path\u003d/turntableRestTest.txt",
   "datacite": {
@@ -1179,9 +1220,11 @@ Body   :
   ],
   "header": []
 }
+```
 ### Update Digital Object
 Operation ID: OP_UPDATE
 Body   :
+```
 {
   "clientId": "coscine_Metadata_ID",
   "targetId": "21.11102/62b97a86-d3cf-4517-9b09-6a09cd9b476d#path\u003d/TestTheREST.txt",
@@ -1224,12 +1267,15 @@ Body   :
   ],
   "header": []
 }
+```
 #### Return
+```
 {
   "attributes": [],
   "elements": [],
   "header": []
 }
+```
 <summary>ClientId: coscine_Metadata_ID</summary>
 </details>
 
