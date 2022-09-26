@@ -189,6 +189,7 @@ public class Main4Rest {
     String TARGET_ONE = "35.TEST/DOIPServer";
     int PORT = 8880;
     String bearerToken = null;
+    String bearerToken4MetaStore = null;
     // Flag for skipping tests for mapping
     boolean skip;
     List<String> listOperations = new ArrayList<>();
@@ -210,8 +211,12 @@ public class Main4Rest {
         try ( BufferedReader br
                 = new BufferedReader(new InputStreamReader(inputStream))) {
           String line;
+          // First line contains token for Coscine
           line = br.readLine();
           bearerToken = /*"bearer " + */ line;
+          // Second line contains token for MetaStore
+          line = br.readLine();
+          bearerToken4MetaStore = /*"bearer " + */ line;
         }
       } catch (IOException ioe) {
         System.out.println("Error reading " + args[0]);
@@ -244,7 +249,7 @@ public class Main4Rest {
     // String[] allClientIds = {"!metastore_Schema_ID", "!coscine_Schema_ID", "!metastore_metadata_ID", "coscine_Metadata_ID"};
     // to allow only coscine metadata server.
     /////////////////////////////////////////////////////////////////////////////
-    String[] allClientIds = {"!metastore_Schema_ID", "coscine_Schema_ID", "!metastore_metadata_ID", "coscine_Metadata_ID"};
+    String[] allClientIds = {"!metastore_Schema_ID", "!coscine_Schema_ID", "!metastore_metadata_ID", "coscine_Metadata_ID"};
     listOperations.add(DoipConstants.OP_CREATE);
     listOperations.add(DoipConstants.OP_RETRIEVE);
     listOperations.add(DoipConstants.OP_UPDATE);
@@ -273,7 +278,7 @@ public class Main4Rest {
       if (listOperations.contains(DoipConstants.OP_CREATE)) {
         printHeader("Create...");
         dobj = createSchema();
-        restDoip = toRestDoip(dobj, clientId, "noToken");
+        restDoip = toRestDoip(dobj, clientId, bearerToken4MetaStore);
 
         result = serveRest(restDoip, Operations.OP_CREATE);
         printResult(result);
@@ -479,7 +484,7 @@ public class Main4Rest {
       if (listOperations.contains(DoipConstants.OP_CREATE)) {
         printHeader("Create...");
         dobj = createMetadataDocument(schemaId);
-        restDoip = toRestDoip(dobj, clientId, "noToken");
+        restDoip = toRestDoip(dobj, clientId, bearerToken4MetaStore);
         result = serveRest(restDoip, Operations.OP_CREATE);
         printResult(result);
         id = result.getId();
@@ -585,30 +590,35 @@ public class Main4Rest {
       id = "21.11102/62b97a86-d3cf-4517-9b09-6a09cd9b476d#path=/newfile.txt";
       id = "21.11102/62b97a86-d3cf-4517-9b09-6a09cd9b476d#path=/coscine.txt";
       id = "21.11102/62b97a86-d3cf-4517-9b09-6a09cd9b476d#path=/final_test_doip_mapping.txt" + sdf.format(new Date());
-      id = "21.11192/62b97a86-d3cf-4517-9b09-6a09cd9b476d#path=/turntableRestTest.txt";
+      id = "21.11192/62b97a86-d3cf-4517-9b09-6a09cd9b476d#path=/turntableRestTest" + sdf.format(new Date()) + ".txt";
+//      id = "21.11192/62b97a86-d3cf-4517-9b09-6a09cd9b476d#path=/FinalTest.txt";
 //      id = "62b97a86-d3cf-4517-9b09-6a09cd9b476d?path=/coscine_upload.txt";
       element = null;
       reader = null;
+      listOperations.clear();
+      listOperations.add(DoipConstants.OP_CREATE);
+      listOperations.add(DoipConstants.OP_RETRIEVE);
+      listOperations.add(DoipConstants.OP_UPDATE);
       // Request 0.DOIP/Op.Create
-//      if (listOperations.contains(DoipConstants.OP_CREATE)) {
-//        printHeader("Create...");
-//        dobj = createMetadataDocument4Coscine(id);
-//        dobj.id = id;
-//        restDoip = toRestDoip(dobj, clientId, bearerToken);
-//        result = serveRest(restDoip, Operations.OP_CREATE, null);
-////      result = client.create(dobj, authInfo, serviceInfo);
-//        printResult(result);
-////        id = result.id;
+      if (listOperations.contains(DoipConstants.OP_CREATE)) {
+        printHeader("Create...");
+        dobj = createMetadataDocument4Coscine(id);
+        restDoip = toRestDoip(dobj, clientId, bearerToken);
+ 
+        result = serveRest(restDoip, Operations.OP_CREATE);
+//      result = client.create(dobj, authInfo, serviceInfo);
+        printResult(result);
+//        id = result.getId();
 //        printHeader("ID = " + id);
-//      } else {
-//        printHeader("Skip Create...");
-//      }
+      } else {
+        printHeader("Skip Create...");
+      }
       if (listOperations.contains(DoipConstants.OP_RETRIEVE)) {
         // Request 0.DOIP/Op.Retrieve
 //        printHeader("Retrieve without elements!");
         Datacite43Schema datacite = new Datacite43Schema();
         restDoip = toEmptyRestDoip(datacite, clientId, bearerToken);
-        restDoip.setId(id);
+        restDoip.setTargetId(id);
         result = serveRest(restDoip, Operations.OP_RETRIEVE);
 ////        result = client.retrieve(id, false, authInfo, serviceInfo);
 //        printResult(result);
@@ -618,10 +628,10 @@ public class Main4Rest {
         content.setId("document");
         content.setValue("Any value");
         restDoip.getElements().add(content);
-        content = new Content();
-        content.setId("digitalObjectId");
-        content.setValue(id);
-        restDoip.getElements().add(content);
+//        content = new Content();
+//        content.setId("digitalObjectId");
+//        content.setValue(id);
+//        restDoip.getElements().add(content);
         restDoip.setTargetId(id);
 
         result = serveRest(restDoip, Operations.OP_RETRIEVE);
@@ -650,6 +660,16 @@ public class Main4Rest {
         restDoip.setTargetId(id);
         result = serveRest(restDoip, Operations.OP_UPDATE);
 //        result = client.update(updateSchema, authInfo, serviceInfo);
+        printResult(result);
+        Datacite43Schema datacite = new Datacite43Schema();
+        restDoip = toEmptyRestDoip(datacite, clientId, bearerToken);
+        restDoip.setTargetId(id);
+        Content content = new Content();
+        content.setId("document");
+        content.setValue("Any value");
+        restDoip.getElements().add(content);
+        result = serveRest(restDoip, Operations.OP_RETRIEVE);
+////        result = client.retrieve(id, false, authInfo, serviceInfo);
         printResult(result);
       } else {
         printHeader("Skip Update...");
@@ -776,6 +796,7 @@ public class Main4Rest {
 
     String json = new Gson().toJson(datacite);
     DigitalObject dobj = new DigitalObject();
+    dobj.id = id;
     dobj.attributes = new JsonObject();
     dobj.attributes.addProperty("datacite", json);
     dobj.elements = new ArrayList<>();
@@ -786,12 +807,6 @@ public class Main4Rest {
     element.length = (long) COSCINE_METADATA_V1.getBytes().length;
     dobj.elements.add(element);
 
-    element = new Element();
-    element.id = "digitalObjectId";
-    element.type = "application/text";
-    element.in = new ByteArrayInputStream(id.getBytes());
-    element.length = (long) id.getBytes().length;
-    dobj.elements.add(element);
     return dobj;
   }
 
@@ -886,6 +901,7 @@ public class Main4Rest {
 
   private static RestDoip toRestDoip(DigitalObject digitalObject, String clientId, String token) throws JsonProcessingException {
     RestDoip returnValue = new RestDoip();
+    returnValue.setTargetId(digitalObject.id);
     returnValue.setClientId(clientId);
     returnValue.setToken(token);
     if (digitalObject.attributes != null && !digitalObject.attributes.isJsonNull()) {
