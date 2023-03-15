@@ -174,7 +174,7 @@ public class Main {
    * @throws java.io.IOException
    * @throws net.dona.doip.client.DoipException
    */
-  public static void main(String[] args) throws IOException, DoipException {
+  public static void main(String[] args) throws IOException, DoipException, InterruptedException {
     if (args.length > 1) {
       System.out.println("Test the REST!!!");
       Main4Rest.main(args);
@@ -239,7 +239,7 @@ public class Main {
     // String[] allClientIds = {"!metastore_Schema_ID", "!coscine_Schema_ID", "!metastore_metadata_ID", "coscine_Metadata_ID"};
     // to allow only coscine metadata server.
     /////////////////////////////////////////////////////////////////////////////
-    String[] allClientIds = {"metastore_Schema_ID", "!coscine_Schema_ID", "!metastore_metadata_ID", "!coscine_Metadata_ID"};
+    String[] allClientIds = {"!metastore_Schema_ID", "!coscine_Schema_ID", "metastore_metadata_ID", "!coscine_Metadata_ID"};
     String clientId = allClientIds[0];
     skip = false;
     if (clientId.startsWith("!")) {
@@ -308,16 +308,17 @@ public class Main {
         printHeader("Skip Update...");
       }
       if (listOperations.contains(DoipConstants.OP_SEARCH)) {
-        // Request 0.DOIP/Op.Update
-        printHeader("Search digital object");
-        DigitalObject updateSchema = updateSchema(id, eTag);
-        String query = "*";
-        SearchResults<DigitalObject> search = client.search(TARGET_ONE, query, null, authInfo, serviceInfo);
-        Iterator<DigitalObject> iterator = search.iterator();
-        printHeader("Search results: ");
-        while (iterator.hasNext()) {
-          printResult(iterator.next());
-        }
+        printHeader("No search available for schemas!");
+//        // Request 0.DOIP/Op.Update
+//        printHeader("Search digital object");
+//        DigitalObject updateSchema = updateSchema(id, eTag);
+//        String query = "*";
+//        SearchResults<DigitalObject> search = client.search(TARGET_ONE, query, null, authInfo, serviceInfo);
+//        Iterator<DigitalObject> iterator = search.iterator();
+//        printHeader("Search results: ");
+//        while (iterator.hasNext()) {
+//          printResult(iterator.next());
+//        }
       } else {
         printHeader("Skip Search...");
 
@@ -443,6 +444,8 @@ public class Main {
       printHeader("LIST_OPERATIONS");
       listOperations = client.listOperations(TARGET_ONE, authInfo, serviceInfo);
       System.out.println(listOperations);
+      listOperations.clear();
+    listOperations.add(DoipConstants.OP_SEARCH);
       id = "anyId";
       eTag = "anyETag";
       element = null;
@@ -498,7 +501,7 @@ public class Main {
       if (listOperations.contains(DoipConstants.OP_SEARCH)) {
         // Request 0.DOIP/Op.Update
         printHeader("Search digital object");
-        DigitalObject updateSchema = updateSchema(id, eTag);
+        DigitalObject updateSchema = searchSchema();
         String query = "*";
         SearchResults<DigitalObject> search = client.search(TARGET_ONE, query, null, authInfo, serviceInfo);
         Iterator<DigitalObject> iterator = search.iterator();
@@ -661,6 +664,35 @@ public class Main {
     element.type = "application/json";
     element.in = new ByteArrayInputStream(JSON_SCHEMA_V2.getBytes());
     element.length = (long) JSON_SCHEMA_V2.getBytes().length;
+    dobj.elements.add(element);
+
+    return dobj;
+  }
+
+
+  private static DigitalObject searchSchema() throws IOException {
+    DigitalObject dobj = new DigitalObject();
+    String id = "noIdatAll";
+    // Add datacite
+    Datacite43Schema datacite = new Datacite43Schema();
+    Title title = new Title();
+    title.setTitle(id);
+    title.setTitleType(Title.TitleType.OTHER);
+    datacite.getTitles().add(title);
+    datacite.setPublisher("NFDI4Ing");
+    datacite.getFormats().add("JSON");//application/json");
+    String json = new Gson().toJson(datacite);
+    dobj.attributes = new JsonObject();
+    dobj.attributes.addProperty("datacite", json);
+    // Add datacite finished
+    dobj.id = "Volker" + id;
+    dobj.elements = new ArrayList<>();
+    Element element = new Element();
+    element.id = "full_text_search";
+    element.type = "plain/text";
+    String SEARCH_TERM = "first";
+    element.in = new ByteArrayInputStream(SEARCH_TERM.getBytes());
+    element.length = (long) SEARCH_TERM.getBytes().length;
     dobj.elements.add(element);
 
     return dobj;
